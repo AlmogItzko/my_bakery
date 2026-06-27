@@ -464,7 +464,7 @@ const STORY_VIDEO_ID = "PASTE_YOUTUBE_ID";
 function openStory(e){
   if(e) e.preventDefault();
   const frame = document.getElementById('vidFrame');
-  if(STORY_VIDEO_ID && STORY_VIDEO_ID !== "https://www.youtube.com/watch?v=32j0pNrgzyY"){
+  if(STORY_VIDEO_ID && STORY_VIDEO_ID !== "32j0pNrgzyY"){
     frame.innerHTML = `<iframe src="https://www.youtube.com/embed/${STORY_VIDEO_ID}?autoplay=1&rel=0&modestbranding=1" title="Funny pigs" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe>`;
   } else {
     frame.innerHTML = `<div class="vid-placeholder">
