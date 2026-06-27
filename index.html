@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hearth &amp; Crumb — Wood-fired bakery</title>
+<title>תנור ופירור — מאפייה בתנור עצים</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,900&family=Karla:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;500;700;900&family=Assistant:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
     --wheat:#EFE3CB;
@@ -20,8 +20,8 @@
     --kraft:#B89164;
     --cream:#F8F0DE;
     --shadow:rgba(43,27,16,.16);
-    --display:'Fraunces',Georgia,serif;
-    --body:'Karla',-apple-system,system-ui,sans-serif;
+    --display:'Frank Ruhl Libre',Georgia,serif;
+    --body:'Assistant',-apple-system,system-ui,sans-serif;
   }
   *{margin:0;padding:0;box-sizing:border-box}
   html{scroll-behavior:smooth}
@@ -39,11 +39,11 @@
     background-image:radial-gradient(var(--kraft) .5px,transparent .5px);
     background-size:7px 7px;mix-blend-mode:multiply;opacity:.06;
   }
-  h1,h2,h3{font-family:var(--display);font-weight:600;line-height:1.05;letter-spacing:-.01em}
+  h1,h2,h3{font-family:var(--display);font-weight:600;line-height:1.1;letter-spacing:0}
   a{color:inherit;text-decoration:none}
   .eyebrow{
-    font-family:var(--body);font-weight:700;font-size:.72rem;letter-spacing:.22em;
-    text-transform:uppercase;color:var(--jam);
+    font-family:var(--body);font-weight:700;font-size:.82rem;letter-spacing:.08em;
+    color:var(--jam);
   }
   .wrap{max-width:1140px;margin:0 auto;padding:0 28px}
 
@@ -58,37 +58,37 @@
     border-bottom:1px solid rgba(184,145,100,.45);
   }
   .nav{display:flex;align-items:center;justify-content:space-between;height:70px}
-  .brand{display:flex;align-items:center;gap:11px;font-family:var(--display);font-weight:900;font-size:1.32rem;letter-spacing:-.02em}
+  .brand{display:flex;align-items:center;gap:11px;font-family:var(--display);font-weight:900;font-size:1.42rem;letter-spacing:0}
   .brand .mark{width:34px;height:34px;flex:none;color:var(--jam)}
   .navlinks{display:flex;gap:30px;align-items:center}
-  .navlinks a{font-weight:500;font-size:.95rem;position:relative;padding:4px 0}
-  .navlinks a::after{content:"";position:absolute;left:0;bottom:-2px;width:0;height:2px;background:var(--honey);transition:width .25s ease}
+  .navlinks a{font-weight:600;font-size:1rem;position:relative;padding:4px 0}
+  .navlinks a::after{content:"";position:absolute;right:0;bottom:-2px;width:0;height:2px;background:var(--honey);transition:width .25s ease}
   .navlinks a:hover::after{width:100%}
   .cart-btn{
     display:inline-flex;align-items:center;gap:9px;background:var(--jam);color:var(--cream);
-    border:none;cursor:pointer;font-family:var(--body);font-weight:700;font-size:.9rem;
+    border:none;cursor:pointer;font-family:var(--body);font-weight:700;font-size:.95rem;
     padding:11px 20px;border-radius:40px;transition:transform .15s ease,background .2s ease;
   }
   .cart-btn:hover{background:var(--jam-dark);transform:translateY(-1px)}
   .cart-btn svg{width:18px;height:18px}
-  .cart-count{background:var(--honey);color:var(--crust);font-size:.74rem;min-width:20px;height:20px;
+  .cart-count{background:var(--honey);color:var(--crust);font-size:.78rem;min-width:20px;height:20px;
     border-radius:20px;display:inline-flex;align-items:center;justify-content:center;padding:0 5px;font-weight:700}
 
   /* ---------- HERO ---------- */
   .hero{position:relative;padding:78px 0 64px;overflow:hidden}
   .hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:54px;align-items:center}
   .hero h1{font-size:clamp(3rem,7vw,5.6rem);font-weight:900}
-  .hero h1 em{font-style:italic;font-weight:500;color:var(--jam)}
-  .hero .lede{font-size:1.18rem;color:var(--crust-soft);max-width:30ch;margin:22px 0 30px}
+  .hero h1 em{font-style:normal;font-weight:500;color:var(--jam)}
+  .hero .lede{font-size:1.22rem;color:var(--crust-soft);max-width:34ch;margin:22px 0 30px}
   .hero-cta{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
   .btn-primary{
-    background:var(--jam);color:var(--cream);font-weight:700;font-size:1rem;
+    background:var(--jam);color:var(--cream);font-weight:700;font-size:1.05rem;
     padding:15px 30px;border-radius:44px;border:none;cursor:pointer;
     transition:transform .15s ease,background .2s ease;font-family:var(--body);
   }
   .btn-primary:hover{background:var(--jam-dark);transform:translateY(-2px)}
-  .btn-ghost{font-weight:700;font-size:1rem;padding:15px 8px;border-bottom:2px solid var(--crust)}
-  .hours-chip{margin-top:28px;display:inline-flex;align-items:center;gap:10px;font-size:.92rem;color:var(--crust-soft)}
+  .btn-ghost{font-weight:700;font-size:1.05rem;padding:15px 8px;border-bottom:2px solid var(--crust)}
+  .hours-chip{margin-top:28px;display:inline-flex;align-items:center;gap:10px;font-size:.98rem;color:var(--crust-soft)}
   .dot{width:9px;height:9px;border-radius:50%;background:var(--herb);box-shadow:0 0 0 3px rgba(94,107,67,.22)}
 
   /* hero loaf illustration card */
@@ -96,21 +96,21 @@
     background:var(--cream);border:1px solid var(--kraft);border-radius:20px;
     padding:30px;box-shadow:0 24px 50px -22px var(--shadow);position:relative;
   }
-  .loaf-card .tag{position:absolute;top:-15px;right:24px;background:var(--honey);color:var(--crust);
-    font-weight:700;font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;padding:7px 14px;border-radius:30px;transform:rotate(3deg)}
+  .loaf-card .tag{position:absolute;top:-15px;left:24px;background:var(--honey);color:var(--crust);
+    font-weight:700;font-size:.8rem;letter-spacing:.04em;padding:7px 14px;border-radius:30px;transform:rotate(-3deg)}
   .loaf-card svg{width:100%;height:auto;display:block}
-  .loaf-card .cap{margin-top:16px;font-family:var(--display);font-size:1.15rem;font-weight:600}
-  .loaf-card .cap span{display:block;font-family:var(--body);font-size:.9rem;font-weight:400;color:var(--crust-soft)}
+  .loaf-card .cap{margin-top:16px;font-family:var(--display);font-size:1.25rem;font-weight:700}
+  .loaf-card .cap span{display:block;font-family:var(--body);font-size:.95rem;font-weight:400;color:var(--crust-soft)}
 
   /* ---------- MENU ---------- */
   .section{padding:74px 0}
   .section-head{text-align:center;max-width:640px;margin:0 auto 44px}
   .section-head h2{font-size:clamp(2.1rem,4vw,3.1rem);margin:10px 0}
-  .section-head p{color:var(--crust-soft);font-size:1.05rem}
+  .section-head p{color:var(--crust-soft);font-size:1.1rem}
 
   .cats{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:40px}
   .cat{background:transparent;border:1.5px solid var(--kraft);color:var(--crust-soft);
-    padding:9px 20px;border-radius:30px;font-family:var(--body);font-weight:700;font-size:.88rem;cursor:pointer;transition:all .2s ease}
+    padding:9px 22px;border-radius:30px;font-family:var(--body);font-weight:700;font-size:.95rem;cursor:pointer;transition:all .2s ease}
   .cat:hover{border-color:var(--crust)}
   .cat.active{background:var(--crust);color:var(--cream);border-color:var(--crust)}
 
@@ -123,12 +123,12 @@
   .card .art{height:158px;display:flex;align-items:center;justify-content:center;border-bottom:1px dashed var(--kraft)}
   .card .art svg{width:108px;height:108px}
   .card .body{padding:20px 20px 22px;display:flex;flex-direction:column;flex:1}
-  .card h3{font-size:1.32rem;display:flex;justify-content:space-between;align-items:baseline;gap:10px}
-  .card .price{font-family:var(--body);font-weight:700;font-size:1rem;color:var(--jam);white-space:nowrap}
-  .card .desc{color:var(--crust-soft);font-size:.92rem;margin:8px 0 18px;flex:1}
+  .card h3{font-size:1.4rem;display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+  .card .price{font-family:var(--body);font-weight:700;font-size:1.05rem;color:var(--jam);white-space:nowrap}
+  .card .desc{color:var(--crust-soft);font-size:.98rem;margin:8px 0 18px;flex:1}
   .add{
     margin-top:auto;background:var(--wheat-deep);border:1.5px solid var(--kraft);color:var(--crust);
-    font-family:var(--body);font-weight:700;font-size:.9rem;padding:11px;border-radius:30px;cursor:pointer;
+    font-family:var(--body);font-weight:700;font-size:.95rem;padding:11px;border-radius:30px;cursor:pointer;
     display:flex;align-items:center;justify-content:center;gap:8px;transition:all .18s ease;
   }
   .add:hover{background:var(--honey);border-color:var(--honey)}
@@ -140,14 +140,14 @@
   .story .eyebrow{color:var(--honey)}
   .story-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
   .story h2{font-size:clamp(2.2rem,4vw,3.2rem);color:var(--cream);margin:12px 0 20px}
-  .story p{color:#D9C6A6;font-size:1.06rem;margin-bottom:16px;max-width:46ch}
+  .story p{color:#D9C6A6;font-size:1.1rem;margin-bottom:16px;max-width:48ch}
   .stats{display:flex;gap:34px;margin-top:30px}
   .stat .n{font-family:var(--display);font-weight:900;font-size:2.4rem;color:var(--honey);line-height:1}
-  .stat .l{font-size:.84rem;letter-spacing:.04em;color:#C9B695;margin-top:6px}
+  .stat .l{font-size:.92rem;letter-spacing:0;color:#C9B695;margin-top:6px}
   .oven{background:#3a2716;border:1px solid #5a4029;border-radius:20px;padding:34px;text-align:center}
   .oven svg{width:100%;max-width:260px;height:auto}
-  .oven .q{font-family:var(--display);font-style:italic;font-size:1.3rem;color:var(--cream);margin-top:18px;line-height:1.3}
-  .oven .by{font-size:.85rem;color:var(--honey);letter-spacing:.14em;text-transform:uppercase;margin-top:12px;font-weight:700}
+  .oven .q{font-family:var(--display);font-style:normal;font-weight:500;font-size:1.4rem;color:var(--cream);margin-top:18px;line-height:1.35}
+  .oven .by{font-size:.92rem;color:var(--honey);letter-spacing:.04em;margin-top:12px;font-weight:700}
 
   /* ---------- GALLERY ---------- */
   .gal-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
@@ -155,7 +155,7 @@
     display:flex;align-items:flex-end;color:var(--cream);transition:transform .25s ease}
   .tile:hover{transform:scale(1.02)}
   .tile svg.bg{position:absolute;inset:0;width:100%;height:100%}
-  .tile .label{position:relative;z-index:2;padding:14px 16px;font-family:var(--display);font-weight:600;font-size:1.05rem;
+  .tile .label{position:relative;z-index:2;padding:14px 16px;font-family:var(--display);font-weight:700;font-size:1.1rem;
     text-shadow:0 1px 8px rgba(0,0,0,.4)}
   .tile.tall{aspect-ratio:auto;grid-row:span 2}
   .tile.wide{aspect-ratio:auto;grid-column:span 2}
@@ -163,68 +163,68 @@
   /* ---------- FOOTER ---------- */
   footer{background:var(--wheat-deep);border-top:1px solid var(--kraft);padding:58px 0 30px}
   .foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:40px}
-  .foot-grid h4{font-family:var(--body);font-weight:700;font-size:.8rem;letter-spacing:.16em;text-transform:uppercase;color:var(--jam);margin-bottom:16px}
-  .foot-grid p,.foot-grid a{color:var(--crust-soft);font-size:.96rem;display:block;margin-bottom:7px}
+  .foot-grid h4{font-family:var(--body);font-weight:700;font-size:.92rem;letter-spacing:.06em;color:var(--jam);margin-bottom:16px}
+  .foot-grid p,.foot-grid a{color:var(--crust-soft);font-size:1rem;display:block;margin-bottom:7px}
   .foot-grid a:hover{color:var(--crust)}
-  .foot-brand{font-family:var(--display);font-weight:900;font-size:1.5rem;margin-bottom:10px;display:flex;align-items:center;gap:10px}
+  .foot-brand{font-family:var(--display);font-weight:900;font-size:1.6rem;margin-bottom:10px;display:flex;align-items:center;gap:10px}
   .foot-brand .mark{width:30px;height:30px;color:var(--jam)}
-  .foot-bottom{border-top:1px solid var(--kraft);margin-top:40px;padding-top:22px;text-align:center;font-size:.85rem;color:var(--crust-soft)}
+  .foot-bottom{border-top:1px solid var(--kraft);margin-top:40px;padding-top:22px;text-align:center;font-size:.9rem;color:var(--crust-soft)}
 
   /* ---------- CART DRAWER ---------- */
   .overlay{position:fixed;inset:0;background:rgba(43,27,16,.5);z-index:90;opacity:0;visibility:hidden;transition:opacity .3s ease}
   .overlay.open{opacity:1;visibility:visible}
   .drawer{
-    position:fixed;top:0;right:0;height:100%;width:400px;max-width:90vw;background:var(--wheat);z-index:100;
-    transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;
-    box-shadow:-20px 0 50px -20px rgba(0,0,0,.4);
+    position:fixed;top:0;left:0;height:100%;width:400px;max-width:90vw;background:var(--wheat);z-index:100;
+    transform:translateX(-100%);transition:transform .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;
+    box-shadow:20px 0 50px -20px rgba(0,0,0,.4);
   }
   .drawer.open{transform:translateX(0)}
   .drawer-head{display:flex;justify-content:space-between;align-items:center;padding:24px 26px;border-bottom:1px solid var(--kraft)}
-  .drawer-head h3{font-size:1.5rem}
+  .drawer-head h3{font-size:1.6rem}
   .x{background:none;border:none;cursor:pointer;color:var(--crust);font-size:1.6rem;line-height:1;padding:4px}
   .drawer-body{flex:1;overflow-y:auto;padding:18px 26px}
   .pig-banner{display:flex;flex-direction:column;align-items:center;padding:16px 26px 14px;border-bottom:1px dashed var(--kraft)}
   .pig-banner svg{width:118px;height:auto}
-  .pig-banner p{margin-top:8px;font-family:var(--display);font-style:italic;font-size:1.02rem;color:var(--crust-soft);text-align:center}
+  .pig-banner p{margin-top:8px;font-family:var(--display);font-style:normal;font-weight:500;font-size:1.1rem;color:var(--crust-soft);text-align:center}
   .empty{text-align:center;color:var(--crust-soft);margin-top:60px}
   .empty svg{width:70px;height:70px;color:var(--kraft);margin-bottom:14px}
   .line{display:flex;gap:14px;align-items:center;padding:15px 0;border-bottom:1px dashed var(--kraft)}
   .line .li-art{width:50px;height:50px;flex:none;background:var(--cream);border:1px solid var(--kraft);border-radius:10px;display:flex;align-items:center;justify-content:center}
   .line .li-art svg{width:34px;height:34px}
   .line .li-info{flex:1}
-  .line .li-name{font-family:var(--display);font-weight:600;font-size:1.02rem}
-  .line .li-price{font-size:.85rem;color:var(--crust-soft)}
+  .line .li-name{font-family:var(--display);font-weight:700;font-size:1.08rem}
+  .line .li-price{font-size:.9rem;color:var(--crust-soft)}
   .qty{display:flex;align-items:center;gap:10px}
   .qty button{width:26px;height:26px;border-radius:50%;border:1.5px solid var(--kraft);background:var(--cream);cursor:pointer;font-weight:700;color:var(--crust);font-size:1rem;display:flex;align-items:center;justify-content:center}
   .qty button:hover{border-color:var(--crust)}
   .qty span{min-width:18px;text-align:center;font-weight:700}
   .drawer-foot{padding:22px 26px;border-top:1px solid var(--kraft);background:var(--wheat-deep)}
   .pickup{margin-bottom:16px}
-  .pickup label{font-size:.78rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--crust-soft);display:block;margin-bottom:7px}
-  .pickup select{width:100%;padding:11px 14px;border-radius:10px;border:1.5px solid var(--kraft);background:var(--cream);font-family:var(--body);font-size:.95rem;color:var(--crust)}
+  .pickup label{font-size:.86rem;font-weight:700;letter-spacing:.04em;color:var(--crust-soft);display:block;margin-bottom:7px}
+  .pickup select{width:100%;padding:11px 14px;border-radius:10px;border:1.5px solid var(--kraft);background:var(--cream);font-family:var(--body);font-size:1rem;color:var(--crust)}
   .totals{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:16px}
   .totals .tl{font-weight:700}
   .totals .tv{font-family:var(--display);font-weight:900;font-size:1.7rem}
-  .checkout{width:100%;background:var(--jam);color:var(--cream);border:none;padding:16px;border-radius:44px;font-family:var(--body);font-weight:700;font-size:1.05rem;cursor:pointer;transition:background .2s ease}
+  .checkout{width:100%;background:var(--jam);color:var(--cream);border:none;padding:16px;border-radius:44px;font-family:var(--body);font-weight:700;font-size:1.1rem;cursor:pointer;transition:background .2s ease}
   .checkout:hover{background:var(--jam-dark)}
   .checkout:disabled{opacity:.4;cursor:not-allowed}
   .confirm{text-align:center;padding:50px 20px}
   .confirm svg{width:84px;height:84px;color:var(--herb);margin-bottom:18px}
-  .confirm h3{font-size:1.8rem;margin-bottom:10px}
+  .confirm h3{font-size:1.9rem;margin-bottom:10px}
   .confirm p{color:var(--crust-soft)}
 
   /* ---------- STORY VIDEO MODAL ---------- */
   .vid-overlay{position:fixed;inset:0;background:rgba(43,27,16,.8);z-index:120;display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;visibility:hidden;transition:opacity .3s ease}
   .vid-overlay.open{opacity:1;visibility:visible}
   .vid-modal{position:relative;width:100%;max-width:880px;background:#1c120a;border:1px solid var(--kraft);border-radius:16px;padding:14px;box-shadow:0 30px 70px -20px rgba(0,0,0,.6)}
-  .vid-x{position:absolute;top:-15px;right:-15px;width:42px;height:42px;border-radius:50%;background:var(--jam);color:var(--cream);border:none;font-size:1.6rem;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(0,0,0,.45);transition:background .2s ease}
+  .vid-x{position:absolute;top:-15px;left:-15px;width:42px;height:42px;border-radius:50%;background:var(--jam);color:var(--cream);border:none;font-size:1.6rem;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(0,0,0,.45);transition:background .2s ease}
   .vid-x:hover{background:var(--jam-dark)}
   .vid-frame{position:relative;width:100%;aspect-ratio:16/9;border-radius:10px;overflow:hidden;background:#000}
   .vid-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
   .vid-placeholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center;color:var(--wheat);padding:34px;background:#241710}
   .vid-placeholder svg{width:78px;height:auto;color:var(--honey)}
-  .vid-placeholder p{font-size:1rem;color:#D9C6A6;max-width:44ch;line-height:1.55}
-  .vid-placeholder code{background:rgba(255,255,255,.12);padding:2px 7px;border-radius:5px;color:var(--cream);font-size:.9em}
+  .vid-placeholder p{font-size:1.05rem;color:#D9C6A6;max-width:46ch;line-height:1.6}
+  .vid-placeholder code{background:rgba(255,255,255,.12);padding:2px 7px;border-radius:5px;color:var(--cream);font-size:.9em;direction:ltr;display:inline-block}
 
   /* reveal */
   .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease}
@@ -267,16 +267,16 @@
 
 <header>
   <div class="wrap nav">
-    <a href="#top" class="brand"><svg class="mark"><use href="#wheat-mark"/></svg>Hearth&nbsp;&amp;&nbsp;Crumb</a>
+    <a href="#top" class="brand"><svg class="mark"><use href="#wheat-mark"/></svg>תנור ופירור</a>
     <nav class="navlinks">
-      <a href="#menu">Menu</a>
-      <a href="#story" onclick="openStory(event)">Our story</a>
-      <a href="#gallery">Gallery</a>
-      <a href="#visit">Visit</a>
+      <a href="#menu">התפריט</a>
+      <a href="#story" onclick="openStory(event)">הסיפור שלנו</a>
+      <a href="#gallery">גלריה</a>
+      <a href="#visit">בקרו אותנו</a>
     </nav>
     <button class="cart-btn" onclick="openCart()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
-      <span class="lbl">Order</span><span class="cart-count" id="cartCount">0</span>
+      <span class="lbl">הזמנה</span><span class="cart-count" id="cartCount">0</span>
     </button>
   </div>
 </header>
@@ -287,17 +287,17 @@
   <section class="hero">
     <div class="wrap hero-grid">
       <div class="reveal">
-        <span class="eyebrow">Wood-fired · Sourdough · Since 2019</span>
-        <h1>Baked before&nbsp;sunrise,<br><em>sold by noon.</em></h1>
-        <p class="lede">A tiny neighborhood bakery turning out long-fermented loaves and butter-folded pastries every single morning.</p>
+        <span class="eyebrow">אפייה בתנור עצים · מחמצת · משנת 2019</span>
+        <h1>נאפה לפני הזריחה,<br><em>נמכר עד הצהריים.</em></h1>
+        <p class="lede">מאפייה שכונתית קטנה שמוציאה מדי בוקר כיכרות בתסיסה ארוכה ומאפים עשירים בחמאה.</p>
         <div class="hero-cta">
-          <button class="btn-primary" onclick="document.getElementById('menu').scrollIntoView()">Order for pickup</button>
-          <a href="#story" class="btn-ghost" onclick="openStory(event)">Our story</a>
+          <button class="btn-primary" onclick="document.getElementById('menu').scrollIntoView()">הזמנה לאיסוף</button>
+          <a href="#story" class="btn-ghost" onclick="openStory(event)">הסיפור שלנו</a>
         </div>
-        <div class="hours-chip"><span class="dot"></span> Open today · 7:00 AM – 2:00 PM (or until the shelves are bare)</div>
+        <div class="hours-chip"><span class="dot"></span> פתוח היום · 7:00–14:00 (או עד שהמדפים מתרוקנים)</div>
       </div>
       <div class="loaf-card reveal">
-        <span class="tag">Today's bake</span>
+        <span class="tag">האפייה של היום</span>
         <svg viewBox="0 0 220 170" xmlns="http://www.w3.org/2000/svg">
           <ellipse cx="110" cy="150" rx="86" ry="11" fill="#000" opacity=".08"/>
           <path d="M30 118c0-46 36-70 80-70s80 24 80 70c0 18-36 26-80 26s-80-8-80-26Z" fill="#C57E1E"/>
@@ -307,7 +307,7 @@
           <ellipse cx="148" cy="92" rx="3" ry="2.4" fill="#5A3410" opacity=".3"/>
           <path d="M44 104c4-3 8-3 12 0" stroke="#5A3410" stroke-width="2.5" stroke-linecap="round" opacity=".3" fill="none"/>
         </svg>
-        <div class="cap">Country Sourdough<span>48-hour rye levain · crackling crust</span></div>
+        <div class="cap">מחמצת כפרית<span>מחמצת שיפון בת 48 שעות · קרום פריך</span></div>
       </div>
     </div>
   </section>
@@ -316,9 +316,9 @@
   <section class="section" id="menu">
     <div class="wrap">
       <div class="section-head reveal">
-        <span class="eyebrow">The board</span>
-        <h2>What's on the shelf</h2>
-        <p>Everything is baked the morning of pickup. Pre-order before 9 AM and we'll set yours aside, still warm.</p>
+        <span class="eyebrow">מהמדף</span>
+        <h2>מה יש על המדף</h2>
+        <p>הכול נאפה בבוקר האיסוף. הזמינו עד 9:00 ונשמור לכם מנה, עדיין חמה.</p>
       </div>
 
       <div class="cats reveal" id="cats"></div>
@@ -332,14 +332,14 @@
   <section class="section story" id="story">
     <div class="wrap story-grid">
       <div class="reveal">
-        <span class="eyebrow">Our story</span>
-        <h2>It started with one stubborn starter named Doris.</h2>
-        <p>In 2019 we took over a shuttered corner shop with a cast-iron oven nobody had lit in a decade. We coaxed it back to life, fed a jar of flour and water until it bubbled, and started baking for the block.</p>
-        <p>Seven years later the oven still runs on oak and applewood, the dough still ferments overnight, and Doris is still going strong. Nothing here is shortcut, frozen, or rushed — just flour, water, salt, fire, and time.</p>
+        <span class="eyebrow">הסיפור שלנו</span>
+        <h2>הכול התחיל ממחמצת עיקשת אחת בשם דוריס.</h2>
+        <p>בשנת 2019 השתלטנו על חנות פינתית נטושה, עם תנור יצוק שאיש לא הדליק כבר עשור. החזרנו אותו לחיים, האכלנו צנצנת של קמח ומים עד שהחלה לבעבע, והתחלנו לאפות לשכונה.</p>
+        <p>שבע שנים לאחר מכן, התנור עדיין בוער על עצי אלון ותפוח, הבצק עדיין תוסס לאורך כל הלילה, ודוריס עדיין חזקה מתמיד. שום דבר כאן אינו קיצור דרך, אינו קפוא ואינו נחפז — רק קמח, מים, מלח, אש וזמן.</p>
         <div class="stats">
-          <div class="stat"><div class="n">48h</div><div class="l">Fermentation</div></div>
-          <div class="stat"><div class="n">3</div><div class="l">Bakers, pre-dawn</div></div>
-          <div class="stat"><div class="n">100%</div><div class="l">Made on-site</div></div>
+          <div class="stat"><div class="n">48</div><div class="l">שעות תסיסה</div></div>
+          <div class="stat"><div class="n">3</div><div class="l">אופים, מהשחר</div></div>
+          <div class="stat"><div class="n">100%</div><div class="l">נאפה במקום</div></div>
         </div>
       </div>
       <div class="oven reveal">
@@ -353,8 +353,8 @@
           <rect x="96" y="150" width="28" height="10" rx="3" fill="#3a2716"/>
           <path d="M100 38c-3-8 3-12 0-20M120 38c-3-8 3-12 0-20" stroke="#C57E1E" stroke-width="3" stroke-linecap="round" opacity=".6" fill="none"/>
         </svg>
-        <p class="q">"Good bread is just patience you can taste."</p>
-        <p class="by">— The Hearth &amp; Crumb crew</p>
+        <p class="q">"לחם טוב הוא פשוט סבלנות שאפשר לטעום."</p>
+        <p class="by">— הצוות של תנור ופירור</p>
       </div>
     </div>
   </section>
@@ -363,9 +363,9 @@
   <section class="section" id="gallery">
     <div class="wrap">
       <div class="section-head reveal">
-        <span class="eyebrow">From the bench</span>
-        <h2>A morning in pictures</h2>
-        <p>Scoring, proofing, and the moment the loaves come out of the fire.</p>
+        <span class="eyebrow">מאחורי הקלעים</span>
+        <h2>בוקר בתמונות</h2>
+        <p>חיתוך, התפחה, והרגע שבו הכיכרות יוצאות מהאש.</p>
       </div>
       <div class="gal-grid reveal" id="galGrid"></div>
     </div>
@@ -377,34 +377,34 @@
 <footer id="visit">
   <div class="wrap foot-grid">
     <div>
-      <div class="foot-brand"><svg class="mark"><use href="#wheat-mark"/></svg>Hearth &amp; Crumb</div>
-      <p>A wood-fired neighborhood bakery. Baked fresh, sold same-day, never frozen.</p>
+      <div class="foot-brand"><svg class="mark"><use href="#wheat-mark"/></svg>תנור ופירור</div>
+      <p>מאפייה שכונתית בתנור עצים. נאפה טרי, נמכר באותו היום, אף פעם לא קפוא.</p>
     </div>
     <div>
-      <h4>Visit us</h4>
-      <p>114 Millstone Lane<br>Greenfield, OR 97401</p>
-      <a href="tel:+15415550148">(541) 555-0148</a>
-      <a href="mailto:hello@hearthandcrumb.co">hello@hearthandcrumb.co</a>
+      <h4>בקרו אותנו</h4>
+      <p>רחוב הריחיים 114<br>תל אביב-יפו</p>
+      <a href="tel:+97235550148">03-555-0148</a>
+      <a href="mailto:hello@tanurupeyrur.co.il">hello@tanurupeyrur.co.il</a>
     </div>
     <div>
-      <h4>Hours</h4>
-      <p>Tue – Fri · 7 AM – 2 PM</p>
-      <p>Sat – Sun · 7 AM – 3 PM</p>
-      <p>Mon · The oven rests</p>
+      <h4>שעות פעילות</h4>
+      <p>שלישי–שישי · 7:00–14:00</p>
+      <p>שבת–ראשון · 7:00–15:00</p>
+      <p>שני · התנור נח</p>
     </div>
   </div>
-  <div class="wrap foot-bottom">© 2026 Hearth &amp; Crumb Bakery · Pre-orders close at 9 AM for same-day pickup</div>
+  <div class="wrap foot-bottom">© 2026 מאפיית תנור ופירור · הזמנות מראש נסגרות ב-9:00 לאיסוף באותו היום</div>
 </footer>
 
 <!-- CART DRAWER -->
 <div class="overlay" id="overlay" onclick="closeCart()"></div>
-<aside class="drawer" id="drawer" aria-label="Your order">
+<aside class="drawer" id="drawer" aria-label="ההזמנה שלך">
   <div class="drawer-head">
-    <h3>Your order</h3>
-    <button class="x" onclick="closeCart()" aria-label="Close">&times;</button>
+    <h3>ההזמנה שלך</h3>
+    <button class="x" onclick="closeCart()" aria-label="סגירה">&times;</button>
   </div>
   <div class="pig-banner">
-    <svg viewBox="0 0 120 112" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A happy pig">
+    <svg viewBox="0 0 120 112" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="חזיר שמח">
       <!-- outer ears -->
       <path d="M34 42 L28 16 L52 33 Z" fill="#D98C8C"/>
       <path d="M86 42 L92 16 L68 33 Z" fill="#D98C8C"/>
@@ -427,56 +427,56 @@
       <ellipse cx="53" cy="72" rx="3.4" ry="5" fill="#A85C5C"/>
       <ellipse cx="67" cy="72" rx="3.4" ry="5" fill="#A85C5C"/>
     </svg>
-    <p>Hungry as a pig? Let's fill your basket.</p>
+    <p>רעבים כמו חזיר? בואו נמלא את הסל.</p>
   </div>
   <div class="drawer-body" id="drawerBody"></div>
   <div class="drawer-foot" id="drawerFoot" style="display:none">
     <div class="pickup">
-      <label for="pickupTime">Pickup time</label>
+      <label for="pickupTime">שעת איסוף</label>
       <select id="pickupTime">
-        <option>Today · 8:00 AM</option>
-        <option>Today · 10:00 AM</option>
-        <option>Today · 12:00 PM</option>
-        <option>Tomorrow · 8:00 AM</option>
-        <option>Tomorrow · 10:00 AM</option>
+        <option>היום · 8:00</option>
+        <option>היום · 10:00</option>
+        <option>היום · 12:00</option>
+        <option>מחר · 8:00</option>
+        <option>מחר · 10:00</option>
       </select>
     </div>
-    <div class="totals"><span class="tl">Total</span><span class="tv" id="total">$0.00</span></div>
-    <button class="checkout" id="checkout" onclick="placeOrder()">Place pickup order</button>
+    <div class="totals"><span class="tl">סה"כ</span><span class="tv" id="total">0.00 ₪</span></div>
+    <button class="checkout" id="checkout" onclick="placeOrder()">ביצוע הזמנה לאיסוף</button>
   </div>
 </aside>
 
 <!-- STORY VIDEO MODAL -->
 <div class="vid-overlay" id="vidOverlay" onclick="bgCloseStory(event)">
-  <div class="vid-modal" role="dialog" aria-modal="true" aria-label="Our story video">
-    <button class="vid-x" onclick="closeStory()" aria-label="Close video">&times;</button>
+  <div class="vid-modal" role="dialog" aria-modal="true" aria-label="סרטון הסיפור שלנו">
+    <button class="vid-x" onclick="closeStory()" aria-label="סגירת הסרטון">&times;</button>
     <div class="vid-frame" id="vidFrame"></div>
   </div>
 </div>
 
 <script>
-/* ====== STORY VIDEO ======
-   Paste a YouTube video ID below to play it when "Our story" is clicked.
-   The ID is the part after "v=" in a URL, e.g. for
-   https://www.youtube.com/watch?v=abc123XYZ  the ID is  abc123XYZ          */
+/* ====== סרטון הסיפור ======
+   הדביקו כאן מזהה סרטון יוטיוב כדי שינוגן בלחיצה על "הסיפור שלנו".
+   המזהה הוא החלק שאחרי "v=" בכתובת. למשל, עבור
+   https://www.youtube.com/watch?v=abc123XYZ  המזהה הוא  abc123XYZ          */
 const STORY_VIDEO_ID = "PASTE_YOUTUBE_ID";
 
 function openStory(e){
   if(e) e.preventDefault();
   const frame = document.getElementById('vidFrame');
-  if(STORY_VIDEO_ID && STORY_VIDEO_ID !== "32j0pNrgzyY"){
-    frame.innerHTML = `<iframe src="https://www.youtube.com/embed/${STORY_VIDEO_ID}?autoplay=1&rel=0&modestbranding=1" title="Funny pigs" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe>`;
+  if(STORY_VIDEO_ID && STORY_VIDEO_ID !== "PASTE_YOUTUBE_ID"){
+    frame.innerHTML = `<iframe src="https://www.youtube.com/embed/${STORY_VIDEO_ID}?autoplay=1&rel=0&modestbranding=1" title="חזירים מצחיקים" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe>`;
   } else {
     frame.innerHTML = `<div class="vid-placeholder">
       <svg viewBox="0 0 64 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"><rect x="3" y="9" width="42" height="30" rx="4"/><path d="M45 19l16-8v26l-16-8z"/><path d="M3 16h42M14 9l-4 7M26 9l-4 7M38 9l-4 7" stroke-width="2.4"/></svg>
-      <p>No video set yet. Open the file, find <code>STORY_VIDEO_ID</code> near the top of the script, and paste a YouTube video ID of your favorite funny-pig clip.</p>
+      <p>עדיין לא הוגדר סרטון. פתחו את הקובץ, מצאו את <code>STORY_VIDEO_ID</code> בראש הסקריפט, והדביקו מזהה של סרטון יוטיוב עם קליפ חזירים מצחיק שאתם אוהבים.</p>
     </div>`;
   }
   document.getElementById('vidOverlay').classList.add('open');
 }
 function closeStory(){
   document.getElementById('vidOverlay').classList.remove('open');
-  document.getElementById('vidFrame').innerHTML = ''; // stops playback
+  document.getElementById('vidFrame').innerHTML = ''; // עוצר את הניגון
 }
 function bgCloseStory(e){ if(e.target.id === 'vidOverlay') closeStory(); }
 document.addEventListener('keydown', e => { if(e.key === 'Escape') closeStory(); });
@@ -493,24 +493,24 @@ const ICONS = {
 
 /* ---- menu data ---- */
 const MENU = [
-  {id:1, cat:'Breads', name:'Country Sourdough', price:9, icon:'loaf', desc:'Our flagship. 48-hour rye levain, blistered crust, open crumb.'},
-  {id:2, cat:'Breads', name:'Sesame Baguette', price:5, icon:'baguette', desc:'Crackly, thin-crusted, rolled in toasted sesame. Best within the hour.'},
-  {id:3, cat:'Breads', name:'Seeded Multigrain', price:10, icon:'loaf', desc:'Flax, millet, and sunflower in a soft, hearty whole-grain loaf.'},
-  {id:4, cat:'Breads', name:'Soft Milk Buns', price:6, icon:'bun', desc:'Pillowy four-pack, brushed with honey butter. Great for sliders.'},
-  {id:5, cat:'Cakes', name:'Olive Oil Lemon Cake', price:7, icon:'cake', desc:'A moist single-serve slice with a bright lemon glaze.'},
-  {id:6, cat:'Cakes', name:'Carrot Walnut Cake', price:7.5, icon:'cake', desc:'Spiced layer slice with toasted walnuts and cream-cheese frosting.'},
-  {id:7, cat:'Cakes', name:'Dark Chocolate Fudge Cake', price:8, icon:'cake', desc:'Deep, rich, and fudgy with a glossy ganache top.'},
-  {id:8, cat:'Cookies', name:'Sea-Salt Chocolate Cookie', price:3.5, icon:'cookie', desc:'Brown-butter dough, dark chocolate pools, flaky salt on top.'},
-  {id:9, cat:'Cookies', name:'Oatmeal Raisin Cookie', price:3, icon:'cookie', desc:'Chewy oats, plump raisins, and a hint of cinnamon.'},
-  {id:10, cat:'Cookies', name:'Brown Butter Snickerdoodle', price:3, icon:'cookie', desc:'Soft and tangy, rolled in cinnamon sugar.'},
+  {id:1, cat:'לחמים', name:'מחמצת כפרית', price:9, icon:'loaf', desc:'הדגל שלנו. מחמצת שיפון בת 48 שעות, קרום שלפוחיות ונקבוביות פתוחה.'},
+  {id:2, cat:'לחמים', name:'באגט שומשום', price:5, icon:'baguette', desc:'פריך, קרום דק, מגולגל בשומשום קלוי. הכי טעים בשעה הראשונה.'},
+  {id:3, cat:'לחמים', name:'לחם דגנים עם גרעינים', price:10, icon:'loaf', desc:'פשתן, דוחן וחמנייה בכיכר רכה ומלאה.'},
+  {id:4, cat:'לחמים', name:'לחמניות חלב רכות', price:6, icon:'bun', desc:'רביעייה אוורירית, מוברשת בחמאת דבש. מצוין לכריכים.'},
+  {id:5, cat:'עוגות', name:'עוגת שמן זית ולימון', price:7, icon:'cake', desc:'פרוסה אישית רכה עם זיגוג לימון מרענן.'},
+  {id:6, cat:'עוגות', name:'עוגת גזר ואגוזים', price:7.5, icon:'cake', desc:'פרוסת שכבות מתובלת עם אגוזי מלך קלויים וקרם גבינה.'},
+  {id:7, cat:'עוגות', name:'עוגת פאדג\' שוקולד מריר', price:8, icon:'cake', desc:'עמוקה, עשירה ופאדג\'ית עם ציפוי גנאש מבריק.'},
+  {id:8, cat:'עוגיות', name:'עוגיית שוקולד ומלח ים', price:3.5, icon:'cookie', desc:'בצק חמאה חומה, שלוליות שוקולד מריר ומלח פתיתים מעל.'},
+  {id:9, cat:'עוגיות', name:'עוגיית שיבולת שועל וצימוקים', price:3, icon:'cookie', desc:'שיבולת שועל לעיסה, צימוקים שמנמנים ונגיעת קינמון.'},
+  {id:10, cat:'עוגיות', name:'סניקרדודל בחמאה חומה', price:3, icon:'cookie', desc:'רכה וחמצמצה, מגולגלת בסוכר קינמון.'},
 ];
 
 const cart = {};
 let confirmed = false;
 
 /* ---- render menu ---- */
-const cats = ['All', ...new Set(MENU.map(m=>m.cat))];
-let activeCat = 'All';
+const cats = ['הכול', ...new Set(MENU.map(m=>m.cat))];
+let activeCat = 'הכול';
 const catWrap = document.getElementById('cats');
 catWrap.innerHTML = cats.map(c=>`<button class="cat${c===activeCat?' active':''}" data-cat="${c}">${c}</button>`).join('');
 catWrap.querySelectorAll('.cat').forEach(b=>b.onclick=()=>{
@@ -521,16 +521,16 @@ catWrap.querySelectorAll('.cat').forEach(b=>b.onclick=()=>{
 
 function renderMenu(){
   const grid=document.getElementById('menuGrid');
-  const items=MENU.filter(m=>activeCat==='All'||m.cat===activeCat);
+  const items=MENU.filter(m=>activeCat==='הכול'||m.cat===activeCat);
   grid.innerHTML=items.map(m=>`
     <article class="card">
       <div class="art">${ICONS[m.icon]}</div>
       <div class="body">
-        <h3>${m.name}<span class="price">$${m.price.toFixed(2)}</span></h3>
+        <h3>${m.name}<span class="price">${m.price.toFixed(2)} ₪</span></h3>
         <p class="desc">${m.desc}</p>
         <button class="add" data-id="${m.id}" onclick="addItem(${m.id},this)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
-          Add to order
+          הוספה להזמנה
         </button>
       </div>
     </article>`).join('');
@@ -539,12 +539,12 @@ renderMenu();
 
 /* ---- gallery ---- */
 const GAL=[
-  {label:'Scoring the boule', icon:'loaf', cls:'tall', c:'#8E2A2A'},
-  {label:'Fresh from the fire', icon:'baguette', cls:'', c:'#A8651A'},
-  {label:'Morning lamination', icon:'croissant', cls:'wide', c:'#5E6B43'},
-  {label:'Cooling rack', icon:'bun', cls:'', c:'#C57E1E'},
-  {label:'The pastry case', icon:'cake', cls:'', c:'#722121'},
-  {label:'Out of the oven', icon:'cookie', cls:'wide', c:'#3a2716'},
+  {label:'חיתוך הכיכר', icon:'loaf', cls:'tall', c:'#8E2A2A'},
+  {label:'ישר מהאש', icon:'baguette', cls:'', c:'#A8651A'},
+  {label:'קיפול הבצק', icon:'croissant', cls:'wide', c:'#5E6B43'},
+  {label:'מתקרר על הרשת', icon:'bun', cls:'', c:'#C57E1E'},
+  {label:'ויטרינת המאפים', icon:'cake', cls:'', c:'#722121'},
+  {label:'יוצא מהתנור', icon:'cookie', cls:'wide', c:'#3a2716'},
 ];
 document.getElementById('galGrid').innerHTML=GAL.map(g=>`
   <figure class="tile ${g.cls}" style="background:linear-gradient(160deg,${g.c},#2B1B10)">
@@ -555,8 +555,8 @@ document.getElementById('galGrid').innerHTML=GAL.map(g=>`
 /* ---- cart logic ---- */
 function addItem(id,btn){
   cart[id]=(cart[id]||0)+1;
-  if(btn){btn.classList.add('added');btn.innerHTML='✓ Added';
-    setTimeout(()=>{btn.classList.remove('added');btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg> Add to order';},900);}
+  if(btn){btn.classList.add('added');btn.innerHTML='✓ נוסף';
+    setTimeout(()=>{btn.classList.remove('added');btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg> הוספה להזמנה';},900);}
   confirmed=false;
   updateCart();
 }
@@ -575,7 +575,7 @@ function updateCart(){
   if(confirmed) return;
   const ids=Object.keys(cart);
   if(ids.length===0){
-    body.innerHTML=`<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2 2h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57L23 6H5"/></svg><p>Your basket is empty.<br>Add something warm from the board.</p></div>`;
+    body.innerHTML=`<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2 2h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57L23 6H5"/></svg><p>הסל שלך ריק.<br>הוסיפו משהו חם מהמדף.</p></div>`;
     foot.style.display='none';
     return;
   }
@@ -584,11 +584,11 @@ function updateCart(){
     const m=MENU.find(x=>x.id==id),q=cart[id];
     return `<div class="line">
       <div class="li-art">${ICONS[m.icon]}</div>
-      <div class="li-info"><div class="li-name">${m.name}</div><div class="li-price">$${m.price.toFixed(2)} each</div></div>
-      <div class="qty"><button onclick="changeQty(${id},-1)" aria-label="Remove one">–</button><span>${q}</span><button onclick="changeQty(${id},1)" aria-label="Add one">+</button></div>
+      <div class="li-info"><div class="li-name">${m.name}</div><div class="li-price">${m.price.toFixed(2)} ₪ ליחידה</div></div>
+      <div class="qty"><button onclick="changeQty(${id},-1)" aria-label="הסרת אחת">–</button><span>${q}</span><button onclick="changeQty(${id},1)" aria-label="הוספת אחת">+</button></div>
     </div>`;
   }).join('');
-  document.getElementById('total').textContent='$'+cartTotal().toFixed(2);
+  document.getElementById('total').textContent=cartTotal().toFixed(2)+' ₪';
   document.getElementById('checkout').disabled=false;
 }
 
@@ -599,8 +599,8 @@ function placeOrder(){
   document.getElementById('drawerFoot').style.display='none';
   document.getElementById('drawerBody').innerHTML=`<div class="confirm">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
-    <h3>Order in the oven!</h3>
-    <p>We've saved your bake for <strong>${time}</strong>. Pay at the counter when you pick up — we'll have it bagged and warm.</p>
+    <h3>ההזמנה בתנור!</h3>
+    <p>שמרנו לך את האפייה ל-<strong>${time}</strong>. התשלום בדלפק בעת האיסוף — נארוז ונחמם בשבילך.</p>
   </div>`;
   for(const k in cart) delete cart[k];
   document.getElementById('cartCount').textContent='0';
