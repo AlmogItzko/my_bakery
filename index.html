@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hearth &amp; Crumb — Wood-fired bakery</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,900&family=Karla:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --wheat:#EFE3CB;
+    --wheat-deep:#E6D5B4;
+    --crust:#2B1B10;
+    --crust-soft:#5A4632;
+    --honey:#C57E1E;
+    --jam:#8E2A2A;
+    --jam-dark:#722121;
+    --herb:#5E6B43;
+    --kraft:#B89164;
+    --cream:#F8F0DE;
+    --shadow:rgba(43,27,16,.16);
+    --display:'Fraunces',Georgia,serif;
+    --body:'Karla',-apple-system,system-ui,sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:var(--body);
+    color:var(--crust);
+    background:var(--wheat);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  /* subtle paper grain */
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.5;
+    background-image:radial-gradient(var(--kraft) .5px,transparent .5px);
+    background-size:7px 7px;mix-blend-mode:multiply;opacity:.06;
+  }
+  h1,h2,h3{font-family:var(--display);font-weight:600;line-height:1.05;letter-spacing:-.01em}
+  a{color:inherit;text-decoration:none}
+  .eyebrow{
+    font-family:var(--body);font-weight:700;font-size:.72rem;letter-spacing:.22em;
+    text-transform:uppercase;color:var(--jam);
+  }
+  .wrap{max-width:1140px;margin:0 auto;padding:0 28px}
+
+  /* wheat-stalk divider */
+  .stalk{display:block;height:26px;margin:0 auto;color:var(--kraft);opacity:.8}
+
+  /* ---------- HEADER ---------- */
+  header{
+    position:sticky;top:0;z-index:50;
+    background:rgba(239,227,203,.86);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid rgba(184,145,100,.45);
+  }
+  .nav{display:flex;align-items:center;justify-content:space-between;height:70px}
+  .brand{display:flex;align-items:center;gap:11px;font-family:var(--display);font-weight:900;font-size:1.32rem;letter-spacing:-.02em}
+  .brand .mark{width:34px;height:34px;flex:none;color:var(--jam)}
+  .navlinks{display:flex;gap:30px;align-items:center}
+  .navlinks a{font-weight:500;font-size:.95rem;position:relative;padding:4px 0}
+  .navlinks a::after{content:"";position:absolute;left:0;bottom:-2px;width:0;height:2px;background:var(--honey);transition:width .25s ease}
+  .navlinks a:hover::after{width:100%}
+  .cart-btn{
+    display:inline-flex;align-items:center;gap:9px;background:var(--jam);color:var(--cream);
+    border:none;cursor:pointer;font-family:var(--body);font-weight:700;font-size:.9rem;
+    padding:11px 20px;border-radius:40px;transition:transform .15s ease,background .2s ease;
+  }
+  .cart-btn:hover{background:var(--jam-dark);transform:translateY(-1px)}
+  .cart-btn svg{width:18px;height:18px}
+  .cart-count{background:var(--honey);color:var(--crust);font-size:.74rem;min-width:20px;height:20px;
+    border-radius:20px;display:inline-flex;align-items:center;justify-content:center;padding:0 5px;font-weight:700}
+
+  /* ---------- HERO ---------- */
+  .hero{position:relative;padding:78px 0 64px;overflow:hidden}
+  .hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:54px;align-items:center}
+  .hero h1{font-size:clamp(3rem,7vw,5.6rem);font-weight:900}
+  .hero h1 em{font-style:italic;font-weight:500;color:var(--jam)}
+  .hero .lede{font-size:1.18rem;color:var(--crust-soft);max-width:30ch;margin:22px 0 30px}
+  .hero-cta{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+  .btn-primary{
+    background:var(--jam);color:var(--cream);font-weight:700;font-size:1rem;
+    padding:15px 30px;border-radius:44px;border:none;cursor:pointer;
+    transition:transform .15s ease,background .2s ease;font-family:var(--body);
+  }
+  .btn-primary:hover{background:var(--jam-dark);transform:translateY(-2px)}
+  .btn-ghost{font-weight:700;font-size:1rem;padding:15px 8px;border-bottom:2px solid var(--crust)}
+  .hours-chip{margin-top:28px;display:inline-flex;align-items:center;gap:10px;font-size:.92rem;color:var(--crust-soft)}
+  .dot{width:9px;height:9px;border-radius:50%;background:var(--herb);box-shadow:0 0 0 3px rgba(94,107,67,.22)}
+
+  /* hero loaf illustration card */
+  .loaf-card{
+    background:var(--cream);border:1px solid var(--kraft);border-radius:20px;
+    padding:30px;box-shadow:0 24px 50px -22px var(--shadow);position:relative;
+  }
+  .loaf-card .tag{position:absolute;top:-15px;right:24px;background:var(--honey);color:var(--crust);
+    font-weight:700;font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;padding:7px 14px;border-radius:30px;transform:rotate(3deg)}
+  .loaf-card svg{width:100%;height:auto;display:block}
+  .loaf-card .cap{margin-top:16px;font-family:var(--display);font-size:1.15rem;font-weight:600}
+  .loaf-card .cap span{display:block;font-family:var(--body);font-size:.9rem;font-weight:400;color:var(--crust-soft)}
+
+  /* ---------- MENU ---------- */
+  .section{padding:74px 0}
+  .section-head{text-align:center;max-width:640px;margin:0 auto 44px}
+  .section-head h2{font-size:clamp(2.1rem,4vw,3.1rem);margin:10px 0}
+  .section-head p{color:var(--crust-soft);font-size:1.05rem}
+
+  .cats{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:40px}
+  .cat{background:transparent;border:1.5px solid var(--kraft);color:var(--crust-soft);
+    padding:9px 20px;border-radius:30px;font-family:var(--body);font-weight:700;font-size:.88rem;cursor:pointer;transition:all .2s ease}
+  .cat:hover{border-color:var(--crust)}
+  .cat.active{background:var(--crust);color:var(--cream);border-color:var(--crust)}
+
+  .menu-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+  .card{
+    background:var(--cream);border:1px solid var(--kraft);border-radius:16px;overflow:hidden;
+    display:flex;flex-direction:column;transition:transform .2s ease,box-shadow .2s ease;
+  }
+  .card:hover{transform:translateY(-4px);box-shadow:0 22px 40px -24px var(--shadow)}
+  .card .art{height:158px;display:flex;align-items:center;justify-content:center;border-bottom:1px dashed var(--kraft)}
+  .card .art svg{width:108px;height:108px}
+  .card .body{padding:20px 20px 22px;display:flex;flex-direction:column;flex:1}
+  .card h3{font-size:1.32rem;display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+  .card .price{font-family:var(--body);font-weight:700;font-size:1rem;color:var(--jam);white-space:nowrap}
+  .card .desc{color:var(--crust-soft);font-size:.92rem;margin:8px 0 18px;flex:1}
+  .add{
+    margin-top:auto;background:var(--wheat-deep);border:1.5px solid var(--kraft);color:var(--crust);
+    font-family:var(--body);font-weight:700;font-size:.9rem;padding:11px;border-radius:30px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;gap:8px;transition:all .18s ease;
+  }
+  .add:hover{background:var(--honey);border-color:var(--honey)}
+  .add svg{width:16px;height:16px}
+  .add.added{background:var(--herb);border-color:var(--herb);color:var(--cream)}
+
+  /* ---------- STORY ---------- */
+  .story{background:var(--crust);color:var(--wheat)}
+  .story .eyebrow{color:var(--honey)}
+  .story-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
+  .story h2{font-size:clamp(2.2rem,4vw,3.2rem);color:var(--cream);margin:12px 0 20px}
+  .story p{color:#D9C6A6;font-size:1.06rem;margin-bottom:16px;max-width:46ch}
+  .stats{display:flex;gap:34px;margin-top:30px}
+  .stat .n{font-family:var(--display);font-weight:900;font-size:2.4rem;color:var(--honey);line-height:1}
+  .stat .l{font-size:.84rem;letter-spacing:.04em;color:#C9B695;margin-top:6px}
+  .oven{background:#3a2716;border:1px solid #5a4029;border-radius:20px;padding:34px;text-align:center}
+  .oven svg{width:100%;max-width:260px;height:auto}
+  .oven .q{font-family:var(--display);font-style:italic;font-size:1.3rem;color:var(--cream);margin-top:18px;line-height:1.3}
+  .oven .by{font-size:.85rem;color:var(--honey);letter-spacing:.14em;text-transform:uppercase;margin-top:12px;font-weight:700}
+
+  /* ---------- GALLERY ---------- */
+  .gal-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  .tile{position:relative;border-radius:14px;overflow:hidden;aspect-ratio:1;border:1px solid var(--kraft);
+    display:flex;align-items:flex-end;color:var(--cream);transition:transform .25s ease}
+  .tile:hover{transform:scale(1.02)}
+  .tile svg.bg{position:absolute;inset:0;width:100%;height:100%}
+  .tile .label{position:relative;z-index:2;padding:14px 16px;font-family:var(--display);font-weight:600;font-size:1.05rem;
+    text-shadow:0 1px 8px rgba(0,0,0,.4)}
+  .tile.tall{aspect-ratio:auto;grid-row:span 2}
+  .tile.wide{aspect-ratio:auto;grid-column:span 2}
+
+  /* ---------- FOOTER ---------- */
+  footer{background:var(--wheat-deep);border-top:1px solid var(--kraft);padding:58px 0 30px}
+  .foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:40px}
+  .foot-grid h4{font-family:var(--body);font-weight:700;font-size:.8rem;letter-spacing:.16em;text-transform:uppercase;color:var(--jam);margin-bottom:16px}
+  .foot-grid p,.foot-grid a{color:var(--crust-soft);font-size:.96rem;display:block;margin-bottom:7px}
+  .foot-grid a:hover{color:var(--crust)}
+  .foot-brand{font-family:var(--display);font-weight:900;font-size:1.5rem;margin-bottom:10px;display:flex;align-items:center;gap:10px}
+  .foot-brand .mark{width:30px;height:30px;color:var(--jam)}
+  .foot-bottom{border-top:1px solid var(--kraft);margin-top:40px;padding-top:22px;text-align:center;font-size:.85rem;color:var(--crust-soft)}
+
+  /* ---------- CART DRAWER ---------- */
+  .overlay{position:fixed;inset:0;background:rgba(43,27,16,.5);z-index:90;opacity:0;visibility:hidden;transition:opacity .3s ease}
+  .overlay.open{opacity:1;visibility:visible}
+  .drawer{
+    position:fixed;top:0;right:0;height:100%;width:400px;max-width:90vw;background:var(--wheat);z-index:100;
+    transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;
+    box-shadow:-20px 0 50px -20px rgba(0,0,0,.4);
+  }
+  .drawer.open{transform:translateX(0)}
+  .drawer-head{display:flex;justify-content:space-between;align-items:center;padding:24px 26px;border-bottom:1px solid var(--kraft)}
+  .drawer-head h3{font-size:1.5rem}
+  .x{background:none;border:none;cursor:pointer;color:var(--crust);font-size:1.6rem;line-height:1;padding:4px}
+  .drawer-body{flex:1;overflow-y:auto;padding:18px 26px}
+  .empty{text-align:center;color:var(--crust-soft);margin-top:60px}
+  .empty svg{width:70px;height:70px;color:var(--kraft);margin-bottom:14px}
+  .line{display:flex;gap:14px;align-items:center;padding:15px 0;border-bottom:1px dashed var(--kraft)}
+  .line .li-art{width:50px;height:50px;flex:none;background:var(--cream);border:1px solid var(--kraft);border-radius:10px;display:flex;align-items:center;justify-content:center}
+  .line .li-art svg{width:34px;height:34px}
+  .line .li-info{flex:1}
+  .line .li-name{font-family:var(--display);font-weight:600;font-size:1.02rem}
+  .line .li-price{font-size:.85rem;color:var(--crust-soft)}
+  .qty{display:flex;align-items:center;gap:10px}
+  .qty button{width:26px;height:26px;border-radius:50%;border:1.5px solid var(--kraft);background:var(--cream);cursor:pointer;font-weight:700;color:var(--crust);font-size:1rem;display:flex;align-items:center;justify-content:center}
+  .qty button:hover{border-color:var(--crust)}
+  .qty span{min-width:18px;text-align:center;font-weight:700}
+  .drawer-foot{padding:22px 26px;border-top:1px solid var(--kraft);background:var(--wheat-deep)}
+  .pickup{margin-bottom:16px}
+  .pickup label{font-size:.78rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--crust-soft);display:block;margin-bottom:7px}
+  .pickup select{width:100%;padding:11px 14px;border-radius:10px;border:1.5px solid var(--kraft);background:var(--cream);font-family:var(--body);font-size:.95rem;color:var(--crust)}
+  .totals{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:16px}
+  .totals .tl{font-weight:700}
+  .totals .tv{font-family:var(--display);font-weight:900;font-size:1.7rem}
+  .checkout{width:100%;background:var(--jam);color:var(--cream);border:none;padding:16px;border-radius:44px;font-family:var(--body);font-weight:700;font-size:1.05rem;cursor:pointer;transition:background .2s ease}
+  .checkout:hover{background:var(--jam-dark)}
+  .checkout:disabled{opacity:.4;cursor:not-allowed}
+  .confirm{text-align:center;padding:50px 20px}
+  .confirm svg{width:84px;height:84px;color:var(--herb);margin-bottom:18px}
+  .confirm h3{font-size:1.8rem;margin-bottom:10px}
+  .confirm p{color:var(--crust-soft)}
+
+  /* reveal */
+  .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease}
+  .reveal.in{opacity:1;transform:none}
+
+  /* ---------- RESPONSIVE ---------- */
+  @media(max-width:880px){
+    .hero-grid{grid-template-columns:1fr;gap:38px}
+    .loaf-card{max-width:420px}
+    .story-grid{grid-template-columns:1fr;gap:36px}
+    .menu-grid{grid-template-columns:repeat(2,1fr)}
+    .gal-grid{grid-template-columns:repeat(2,1fr)}
+    .foot-grid{grid-template-columns:1fr;gap:30px}
+    .navlinks{display:none}
+  }
+  @media(max-width:520px){
+    .menu-grid{grid-template-columns:1fr}
+    .gal-grid{grid-template-columns:1fr}
+    .tile.wide,.tile.tall{grid-column:auto;grid-row:auto;aspect-ratio:1}
+    .stats{gap:24px}
+    .cart-btn span.lbl{display:none}
+  }
+  @media(prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+    .reveal{opacity:1;transform:none}
+  }
+</style>
+</head>
+<body>
+
+<!-- wheat mark reused -->
+<svg style="display:none">
+  <symbol id="wheat-mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 22V9"/>
+    <path d="M12 9c0-3 2-5 2-7 0 0-2 1-2 3-0-2-2-3-2-3 0 2 2 4 2 7Z" fill="currentColor"/>
+    <path d="M12 13c2 0 3.5-1.2 4-3-2 .2-3.4 1-4 2.2-.6-1.2-2-2-4-2.2.5 1.8 2 3 4 3Z" fill="currentColor"/>
+    <path d="M12 17c2 0 3.5-1.2 4-3-2 .2-3.4 1-4 2.2-.6-1.2-2-2-4-2.2.5 1.8 2 3 4 3Z" fill="currentColor"/>
+  </symbol>
+</svg>
+
+<header>
+  <div class="wrap nav">
+    <a href="#top" class="brand"><svg class="mark"><use href="#wheat-mark"/></svg>Hearth&nbsp;&amp;&nbsp;Crumb</a>
+    <nav class="navlinks">
+      <a href="#menu">Menu</a>
+      <a href="#story">Our story</a>
+      <a href="#gallery">Gallery</a>
+      <a href="#visit">Visit</a>
+    </nav>
+    <button class="cart-btn" onclick="openCart()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+      <span class="lbl">Order</span><span class="cart-count" id="cartCount">0</span>
+    </button>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div class="reveal">
+        <span class="eyebrow">Wood-fired · Sourdough · Since 2019</span>
+        <h1>Baked before&nbsp;sunrise,<br><em>sold by noon.</em></h1>
+        <p class="lede">A tiny neighborhood bakery turning out long-fermented loaves and butter-folded pastries every single morning.</p>
+        <div class="hero-cta">
+          <button class="btn-primary" onclick="document.getElementById('menu').scrollIntoView()">Order for pickup</button>
+          <a href="#story" class="btn-ghost">Our story</a>
+        </div>
+        <div class="hours-chip"><span class="dot"></span> Open today · 7:00 AM – 2:00 PM (or until the shelves are bare)</div>
+      </div>
+      <div class="loaf-card reveal">
+        <span class="tag">Today's bake</span>
+        <svg viewBox="0 0 220 170" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="110" cy="150" rx="86" ry="11" fill="#000" opacity=".08"/>
+          <path d="M30 118c0-46 36-70 80-70s80 24 80 70c0 18-36 26-80 26s-80-8-80-26Z" fill="#C57E1E"/>
+          <path d="M30 118c0-46 36-70 80-70s80 24 80 70c0 8-7 13-18 17-12-9-34-15-62-15s-50 6-62 15c-11-4-18-9-18-17Z" fill="#A8651A"/>
+          <path d="M70 64c8 28 16 46 24 60M104 56c4 32 6 52 8 70M140 62c-6 28-12 48-18 64" stroke="#5A3410" stroke-width="3.5" stroke-linecap="round" opacity=".55" fill="none"/>
+          <ellipse cx="76" cy="86" rx="3" ry="2.4" fill="#5A3410" opacity=".3"/>
+          <ellipse cx="148" cy="92" rx="3" ry="2.4" fill="#5A3410" opacity=".3"/>
+          <path d="M44 104c4-3 8-3 12 0" stroke="#5A3410" stroke-width="2.5" stroke-linecap="round" opacity=".3" fill="none"/>
+        </svg>
+        <div class="cap">Country Sourdough<span>48-hour rye levain · crackling crust</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MENU / ORDER -->
+  <section class="section" id="menu">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">The board</span>
+        <h2>What's on the shelf</h2>
+        <p>Everything is baked the morning of pickup. Pre-order before 9 AM and we'll set yours aside, still warm.</p>
+      </div>
+
+      <div class="cats reveal" id="cats"></div>
+      <div class="menu-grid" id="menuGrid"></div>
+    </div>
+  </section>
+
+  <svg class="stalk" viewBox="0 0 24 24"><use href="#wheat-mark"/></svg>
+
+  <!-- STORY -->
+  <section class="section story" id="story">
+    <div class="wrap story-grid">
+      <div class="reveal">
+        <span class="eyebrow">Our story</span>
+        <h2>It started with one stubborn starter named Doris.</h2>
+        <p>In 2019 we took over a shuttered corner shop with a cast-iron oven nobody had lit in a decade. We coaxed it back to life, fed a jar of flour and water until it bubbled, and started baking for the block.</p>
+        <p>Seven years later the oven still runs on oak and applewood, the dough still ferments overnight, and Doris is still going strong. Nothing here is shortcut, frozen, or rushed — just flour, water, salt, fire, and time.</p>
+        <div class="stats">
+          <div class="stat"><div class="n">48h</div><div class="l">Fermentation</div></div>
+          <div class="stat"><div class="n">3</div><div class="l">Bakers, pre-dawn</div></div>
+          <div class="stat"><div class="n">100%</div><div class="l">Made on-site</div></div>
+        </div>
+      </div>
+      <div class="oven reveal">
+        <svg viewBox="0 0 220 200" xmlns="http://www.w3.org/2000/svg">
+          <rect x="30" y="40" width="160" height="130" rx="16" fill="#5A4029"/>
+          <rect x="30" y="40" width="160" height="34" rx="16" fill="#6b4d31"/>
+          <path d="M55 120a55 40 0 0 1 110 0Z" fill="#1c120a"/>
+          <path d="M70 120a40 28 0 0 1 80 0Z" fill="#C57E1E"/>
+          <path d="M82 120a28 18 0 0 1 56 0Z" fill="#E0A23A"/>
+          <circle cx="78" cy="95" r="5" fill="#E0A23A"/><circle cx="142" cy="95" r="5" fill="#E0A23A"/>
+          <rect x="96" y="150" width="28" height="10" rx="3" fill="#3a2716"/>
+          <path d="M100 38c-3-8 3-12 0-20M120 38c-3-8 3-12 0-20" stroke="#C57E1E" stroke-width="3" stroke-linecap="round" opacity=".6" fill="none"/>
+        </svg>
+        <p class="q">"Good bread is just patience you can taste."</p>
+        <p class="by">— The Hearth &amp; Crumb crew</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- GALLERY -->
+  <section class="section" id="gallery">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">From the bench</span>
+        <h2>A morning in pictures</h2>
+        <p>Scoring, proofing, and the moment the loaves come out of the fire.</p>
+      </div>
+      <div class="gal-grid reveal" id="galGrid"></div>
+    </div>
+  </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer id="visit">
+  <div class="wrap foot-grid">
+    <div>
+      <div class="foot-brand"><svg class="mark"><use href="#wheat-mark"/></svg>Hearth &amp; Crumb</div>
+      <p>A wood-fired neighborhood bakery. Baked fresh, sold same-day, never frozen.</p>
+    </div>
+    <div>
+      <h4>Visit us</h4>
+      <p>114 Millstone Lane<br>Greenfield, OR 97401</p>
+      <a href="tel:+15415550148">(541) 555-0148</a>
+      <a href="mailto:hello@hearthandcrumb.co">hello@hearthandcrumb.co</a>
+    </div>
+    <div>
+      <h4>Hours</h4>
+      <p>Tue – Fri · 7 AM – 2 PM</p>
+      <p>Sat – Sun · 7 AM – 3 PM</p>
+      <p>Mon · The oven rests</p>
+    </div>
+  </div>
+  <div class="wrap foot-bottom">© 2026 Hearth &amp; Crumb Bakery · Pre-orders close at 9 AM for same-day pickup</div>
+</footer>
+
+<!-- CART DRAWER -->
+<div class="overlay" id="overlay" onclick="closeCart()"></div>
+<aside class="drawer" id="drawer" aria-label="Your order">
+  <div class="drawer-head">
+    <h3>Your order</h3>
+    <button class="x" onclick="closeCart()" aria-label="Close">&times;</button>
+  </div>
+  <div class="drawer-body" id="drawerBody"></div>
+  <div class="drawer-foot" id="drawerFoot" style="display:none">
+    <div class="pickup">
+      <label for="pickupTime">Pickup time</label>
+      <select id="pickupTime">
+        <option>Today · 8:00 AM</option>
+        <option>Today · 10:00 AM</option>
+        <option>Today · 12:00 PM</option>
+        <option>Tomorrow · 8:00 AM</option>
+        <option>Tomorrow · 10:00 AM</option>
+      </select>
+    </div>
+    <div class="totals"><span class="tl">Total</span><span class="tv" id="total">$0.00</span></div>
+    <button class="checkout" id="checkout" onclick="placeOrder()">Place pickup order</button>
+  </div>
+</aside>
+
+<script>
+/* ---- bakery SVG icons ---- */
+const ICONS = {
+  loaf:`<svg viewBox="0 0 80 80"><path d="M12 46c0-17 13-26 28-26s28 9 28 26c0 7-13 10-28 10s-28-3-28-10Z" fill="#C57E1E"/><path d="M12 46c0-17 13-26 28-26s28 9 28 26c0 3-3 5-7 7-5-3-13-5-21-5s-16 2-21 5c-4-2-7-4-7-7Z" fill="#A8651A"/><path d="M28 26c3 11 6 18 9 24M40 23c2 12 2 20 3 28M52 26c-2 11-5 18-7 24" stroke="#5A3410" stroke-width="2" stroke-linecap="round" opacity=".5" fill="none"/></svg>`,
+  baguette:`<svg viewBox="0 0 80 80"><g transform="rotate(-32 40 40)"><rect x="14" y="32" width="52" height="16" rx="8" fill="#C57E1E"/><rect x="14" y="32" width="52" height="9" rx="4.5" fill="#D8943A"/><path d="M26 36l-3 8M36 36l-3 8M46 36l-3 8M56 36l-3 8" stroke="#5A3410" stroke-width="2" stroke-linecap="round" opacity=".55"/></g></svg>`,
+  croissant:`<svg viewBox="0 0 80 80"><path d="M16 50c0-14 12-24 24-24s24 10 24 24c0 4-6 6-10 4-2-8-8-12-14-12s-12 4-14 12c-4 2-10 0-10-4Z" fill="#D8943A"/><path d="M22 47c2-6 9-9 18-9s16 3 18 9" stroke="#A8651A" stroke-width="2.5" fill="none" opacity=".6"/><path d="M30 44l-2 6M40 42v8M50 44l2 6" stroke="#A8651A" stroke-width="2" stroke-linecap="round" opacity=".5"/></svg>`,
+  bun:`<svg viewBox="0 0 80 80"><ellipse cx="40" cy="44" rx="26" ry="20" fill="#C57E1E"/><ellipse cx="40" cy="40" rx="26" ry="16" fill="#D8943A"/><circle cx="34" cy="36" r="1.5" fill="#5A3410"/><circle cx="44" cy="34" r="1.5" fill="#5A3410"/><circle cx="40" cy="40" r="1.5" fill="#5A3410"/><circle cx="48" cy="40" r="1.5" fill="#5A3410"/></svg>`,
+  cake:`<svg viewBox="0 0 80 80"><rect x="20" y="40" width="40" height="22" rx="4" fill="#E8C9A0"/><path d="M20 44c5 4 10 0 13 3s8 1 11-1 8 3 11 1 5-3 5-3v-4H20Z" fill="#8E2A2A"/><rect x="38" y="24" width="4" height="14" rx="2" fill="#C57E1E"/><circle cx="40" cy="22" r="3" fill="#E0A23A"/></svg>`,
+  cookie:`<svg viewBox="0 0 80 80"><circle cx="40" cy="42" r="24" fill="#C57E1E"/><circle cx="40" cy="42" r="24" fill="#A8651A" opacity=".25"/><circle cx="32" cy="36" r="3" fill="#3a2716"/><circle cx="48" cy="40" r="3" fill="#3a2716"/><circle cx="38" cy="50" r="3" fill="#3a2716"/><circle cx="50" cy="30" r="2.5" fill="#3a2716"/></svg>`,
+};
+
+/* ---- menu data ---- */
+const MENU = [
+  {id:1, cat:'Breads', name:'Country Sourdough', price:9, icon:'loaf', desc:'Our flagship. 48-hour rye levain, blistered crust, open crumb.'},
+  {id:2, cat:'Breads', name:'Sesame Baguette', price:5, icon:'baguette', desc:'Crackly, thin-crusted, rolled in toasted sesame. Best within the hour.'},
+  {id:3, cat:'Breads', name:'Seeded Multigrain', price:10, icon:'loaf', desc:'Flax, millet, and sunflower in a soft, hearty whole-grain loaf.'},
+  {id:4, cat:'Breads', name:'Soft Milk Buns', price:6, icon:'bun', desc:'Pillowy four-pack, brushed with honey butter. Great for sliders.'},
+  {id:5, cat:'Pastries', name:'Butter Croissant', price:4.5, icon:'croissant', desc:'27 folds of European butter. Shatteringly crisp, never greasy.'},
+  {id:6, cat:'Pastries', name:'Almond Croissant', price:5.5, icon:'croissant', desc:'Day-two croissants soaked in syrup, filled with almond cream.'},
+  {id:7, cat:'Pastries', name:'Cinnamon Morning Bun', price:5, icon:'bun', desc:'Laminated dough rolled with cinnamon sugar and orange zest.'},
+  {id:8, cat:'Sweets', name:'Sea-Salt Chocolate Cookie', price:3.5, icon:'cookie', desc:'Brown-butter dough, dark chocolate pools, flaky salt on top.'},
+  {id:9, cat:'Sweets', name:'Olive Oil Lemon Cake', price:7, icon:'cake', desc:'A moist single-serve slice with a bright lemon glaze.'},
+];
+
+const cart = {};
+let confirmed = false;
+
+/* ---- render menu ---- */
+const cats = ['All', ...new Set(MENU.map(m=>m.cat))];
+let activeCat = 'All';
+const catWrap = document.getElementById('cats');
+catWrap.innerHTML = cats.map(c=>`<button class="cat${c===activeCat?' active':''}" data-cat="${c}">${c}</button>`).join('');
+catWrap.querySelectorAll('.cat').forEach(b=>b.onclick=()=>{
+  activeCat=b.dataset.cat;
+  catWrap.querySelectorAll('.cat').forEach(x=>x.classList.toggle('active',x.dataset.cat===activeCat));
+  renderMenu();
+});
+
+function renderMenu(){
+  const grid=document.getElementById('menuGrid');
+  const items=MENU.filter(m=>activeCat==='All'||m.cat===activeCat);
+  grid.innerHTML=items.map(m=>`
+    <article class="card">
+      <div class="art">${ICONS[m.icon]}</div>
+      <div class="body">
+        <h3>${m.name}<span class="price">$${m.price.toFixed(2)}</span></h3>
+        <p class="desc">${m.desc}</p>
+        <button class="add" data-id="${m.id}" onclick="addItem(${m.id},this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          Add to order
+        </button>
+      </div>
+    </article>`).join('');
+}
+renderMenu();
+
+/* ---- gallery ---- */
+const GAL=[
+  {label:'Scoring the boule', icon:'loaf', cls:'tall', c:'#8E2A2A'},
+  {label:'Fresh from the fire', icon:'baguette', cls:'', c:'#A8651A'},
+  {label:'Morning lamination', icon:'croissant', cls:'wide', c:'#5E6B43'},
+  {label:'Cooling rack', icon:'bun', cls:'', c:'#C57E1E'},
+  {label:'The pastry case', icon:'cake', cls:'', c:'#722121'},
+  {label:'Out of the oven', icon:'cookie', cls:'wide', c:'#3a2716'},
+];
+document.getElementById('galGrid').innerHTML=GAL.map(g=>`
+  <figure class="tile ${g.cls}" style="background:linear-gradient(160deg,${g.c},#2B1B10)">
+    <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:.5">${ICONS[g.icon].replace('viewBox="0 0 80 80"','viewBox="0 0 80 80" style="width:60%;height:60%"')}</div>
+    <figcaption class="label">${g.label}</figcaption>
+  </figure>`).join('');
+
+/* ---- cart logic ---- */
+function addItem(id,btn){
+  cart[id]=(cart[id]||0)+1;
+  if(btn){btn.classList.add('added');btn.innerHTML='✓ Added';
+    setTimeout(()=>{btn.classList.remove('added');btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg> Add to order';},900);}
+  confirmed=false;
+  updateCart();
+}
+function changeQty(id,d){
+  cart[id]=(cart[id]||0)+d;
+  if(cart[id]<=0) delete cart[id];
+  updateCart();
+}
+function itemCount(){return Object.values(cart).reduce((a,b)=>a+b,0);}
+function cartTotal(){return Object.entries(cart).reduce((s,[id,q])=>s+MENU.find(m=>m.id==id).price*q,0);}
+
+function updateCart(){
+  document.getElementById('cartCount').textContent=itemCount();
+  const body=document.getElementById('drawerBody');
+  const foot=document.getElementById('drawerFoot');
+  if(confirmed) return;
+  const ids=Object.keys(cart);
+  if(ids.length===0){
+    body.innerHTML=`<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2 2h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57L23 6H5"/></svg><p>Your basket is empty.<br>Add something warm from the board.</p></div>`;
+    foot.style.display='none';
+    return;
+  }
+  foot.style.display='block';
+  body.innerHTML=ids.map(id=>{
+    const m=MENU.find(x=>x.id==id),q=cart[id];
+    return `<div class="line">
+      <div class="li-art">${ICONS[m.icon]}</div>
+      <div class="li-info"><div class="li-name">${m.name}</div><div class="li-price">$${m.price.toFixed(2)} each</div></div>
+      <div class="qty"><button onclick="changeQty(${id},-1)" aria-label="Remove one">–</button><span>${q}</span><button onclick="changeQty(${id},1)" aria-label="Add one">+</button></div>
+    </div>`;
+  }).join('');
+  document.getElementById('total').textContent='$'+cartTotal().toFixed(2);
+  document.getElementById('checkout').disabled=false;
+}
+
+function placeOrder(){
+  if(itemCount()===0) return;
+  const time=document.getElementById('pickupTime').value;
+  confirmed=true;
+  document.getElementById('drawerFoot').style.display='none';
+  document.getElementById('drawerBody').innerHTML=`<div class="confirm">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
+    <h3>Order in the oven!</h3>
+    <p>We've saved your bake for <strong>${time}</strong>. Pay at the counter when you pick up — we'll have it bagged and warm.</p>
+  </div>`;
+  for(const k in cart) delete cart[k];
+  document.getElementById('cartCount').textContent='0';
+}
+
+/* ---- drawer open/close ---- */
+function openCart(){document.getElementById('drawer').classList.add('open');document.getElementById('overlay').classList.add('open');if(itemCount()===0||confirmed){confirmed=false;updateCart();}}
+function closeCart(){document.getElementById('drawer').classList.remove('open');document.getElementById('overlay').classList.remove('open');}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeCart();});
+updateCart();
+
+/* ---- scroll reveal ---- */
+const io=new IntersectionObserver((es)=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}}),{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>
