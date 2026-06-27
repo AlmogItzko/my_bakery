@@ -183,6 +183,9 @@
   .drawer-head h3{font-size:1.5rem}
   .x{background:none;border:none;cursor:pointer;color:var(--crust);font-size:1.6rem;line-height:1;padding:4px}
   .drawer-body{flex:1;overflow-y:auto;padding:18px 26px}
+  .pig-banner{display:flex;flex-direction:column;align-items:center;padding:16px 26px 14px;border-bottom:1px dashed var(--kraft)}
+  .pig-banner svg{width:118px;height:auto}
+  .pig-banner p{margin-top:8px;font-family:var(--display);font-style:italic;font-size:1.02rem;color:var(--crust-soft);text-align:center}
   .empty{text-align:center;color:var(--crust-soft);margin-top:60px}
   .empty svg{width:70px;height:70px;color:var(--kraft);margin-bottom:14px}
   .line{display:flex;gap:14px;align-items:center;padding:15px 0;border-bottom:1px dashed var(--kraft)}
@@ -209,6 +212,19 @@
   .confirm svg{width:84px;height:84px;color:var(--herb);margin-bottom:18px}
   .confirm h3{font-size:1.8rem;margin-bottom:10px}
   .confirm p{color:var(--crust-soft)}
+
+  /* ---------- STORY VIDEO MODAL ---------- */
+  .vid-overlay{position:fixed;inset:0;background:rgba(43,27,16,.8);z-index:120;display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;visibility:hidden;transition:opacity .3s ease}
+  .vid-overlay.open{opacity:1;visibility:visible}
+  .vid-modal{position:relative;width:100%;max-width:880px;background:#1c120a;border:1px solid var(--kraft);border-radius:16px;padding:14px;box-shadow:0 30px 70px -20px rgba(0,0,0,.6)}
+  .vid-x{position:absolute;top:-15px;right:-15px;width:42px;height:42px;border-radius:50%;background:var(--jam);color:var(--cream);border:none;font-size:1.6rem;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(0,0,0,.45);transition:background .2s ease}
+  .vid-x:hover{background:var(--jam-dark)}
+  .vid-frame{position:relative;width:100%;aspect-ratio:16/9;border-radius:10px;overflow:hidden;background:#000}
+  .vid-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+  .vid-placeholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center;color:var(--wheat);padding:34px;background:#241710}
+  .vid-placeholder svg{width:78px;height:auto;color:var(--honey)}
+  .vid-placeholder p{font-size:1rem;color:#D9C6A6;max-width:44ch;line-height:1.55}
+  .vid-placeholder code{background:rgba(255,255,255,.12);padding:2px 7px;border-radius:5px;color:var(--cream);font-size:.9em}
 
   /* reveal */
   .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease}
@@ -254,7 +270,7 @@
     <a href="#top" class="brand"><svg class="mark"><use href="#wheat-mark"/></svg>Hearth&nbsp;&amp;&nbsp;Crumb</a>
     <nav class="navlinks">
       <a href="#menu">Menu</a>
-      <a href="#story">Our story</a>
+      <a href="#story" onclick="openStory(event)">Our story</a>
       <a href="#gallery">Gallery</a>
       <a href="#visit">Visit</a>
     </nav>
@@ -276,7 +292,7 @@
         <p class="lede">A tiny neighborhood bakery turning out long-fermented loaves and butter-folded pastries every single morning.</p>
         <div class="hero-cta">
           <button class="btn-primary" onclick="document.getElementById('menu').scrollIntoView()">Order for pickup</button>
-          <a href="#story" class="btn-ghost">Our story</a>
+          <a href="#story" class="btn-ghost" onclick="openStory(event)">Our story</a>
         </div>
         <div class="hours-chip"><span class="dot"></span> Open today · 7:00 AM – 2:00 PM (or until the shelves are bare)</div>
       </div>
@@ -387,6 +403,32 @@
     <h3>Your order</h3>
     <button class="x" onclick="closeCart()" aria-label="Close">&times;</button>
   </div>
+  <div class="pig-banner">
+    <svg viewBox="0 0 120 112" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A happy pig">
+      <!-- outer ears -->
+      <path d="M34 42 L28 16 L52 33 Z" fill="#D98C8C"/>
+      <path d="M86 42 L92 16 L68 33 Z" fill="#D98C8C"/>
+      <!-- head -->
+      <ellipse cx="60" cy="60" rx="44" ry="38" fill="#E8A0A0"/>
+      <!-- inner ears -->
+      <path d="M37 37 L34 23 L47 32 Z" fill="#C97676"/>
+      <path d="M83 37 L86 23 L73 32 Z" fill="#C97676"/>
+      <!-- cheeks -->
+      <circle cx="30" cy="66" r="7" fill="#E88B8B" opacity=".5"/>
+      <circle cx="90" cy="66" r="7" fill="#E88B8B" opacity=".5"/>
+      <!-- eyes -->
+      <circle cx="46" cy="52" r="5" fill="#5A3410"/>
+      <circle cx="74" cy="52" r="5" fill="#5A3410"/>
+      <circle cx="47.6" cy="50.4" r="1.6" fill="#fff"/>
+      <circle cx="75.6" cy="50.4" r="1.6" fill="#fff"/>
+      <!-- snout -->
+      <ellipse cx="60" cy="72" rx="20" ry="14" fill="#D98C8C"/>
+      <ellipse cx="60" cy="72" rx="20" ry="14" fill="none" stroke="#C97676" stroke-width="1.5"/>
+      <ellipse cx="53" cy="72" rx="3.4" ry="5" fill="#A85C5C"/>
+      <ellipse cx="67" cy="72" rx="3.4" ry="5" fill="#A85C5C"/>
+    </svg>
+    <p>Hungry as a pig? Let's fill your basket.</p>
+  </div>
   <div class="drawer-body" id="drawerBody"></div>
   <div class="drawer-foot" id="drawerFoot" style="display:none">
     <div class="pickup">
@@ -404,7 +446,41 @@
   </div>
 </aside>
 
+<!-- STORY VIDEO MODAL -->
+<div class="vid-overlay" id="vidOverlay" onclick="bgCloseStory(event)">
+  <div class="vid-modal" role="dialog" aria-modal="true" aria-label="Our story video">
+    <button class="vid-x" onclick="closeStory()" aria-label="Close video">&times;</button>
+    <div class="vid-frame" id="vidFrame"></div>
+  </div>
+</div>
+
 <script>
+/* ====== STORY VIDEO ======
+   Paste a YouTube video ID below to play it when "Our story" is clicked.
+   The ID is the part after "v=" in a URL, e.g. for
+   https://www.youtube.com/watch?v=abc123XYZ  the ID is  abc123XYZ          */
+const STORY_VIDEO_ID = "PASTE_YOUTUBE_ID";
+
+function openStory(e){
+  if(e) e.preventDefault();
+  const frame = document.getElementById('vidFrame');
+  if(STORY_VIDEO_ID && STORY_VIDEO_ID !== "https://www.youtube.com/watch?v=32j0pNrgzyY"){
+    frame.innerHTML = `<iframe src="https://www.youtube.com/embed/${STORY_VIDEO_ID}?autoplay=1&rel=0&modestbranding=1" title="Funny pigs" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe>`;
+  } else {
+    frame.innerHTML = `<div class="vid-placeholder">
+      <svg viewBox="0 0 64 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"><rect x="3" y="9" width="42" height="30" rx="4"/><path d="M45 19l16-8v26l-16-8z"/><path d="M3 16h42M14 9l-4 7M26 9l-4 7M38 9l-4 7" stroke-width="2.4"/></svg>
+      <p>No video set yet. Open the file, find <code>STORY_VIDEO_ID</code> near the top of the script, and paste a YouTube video ID of your favorite funny-pig clip.</p>
+    </div>`;
+  }
+  document.getElementById('vidOverlay').classList.add('open');
+}
+function closeStory(){
+  document.getElementById('vidOverlay').classList.remove('open');
+  document.getElementById('vidFrame').innerHTML = ''; // stops playback
+}
+function bgCloseStory(e){ if(e.target.id === 'vidOverlay') closeStory(); }
+document.addEventListener('keydown', e => { if(e.key === 'Escape') closeStory(); });
+
 /* ---- bakery SVG icons ---- */
 const ICONS = {
   loaf:`<svg viewBox="0 0 80 80"><path d="M12 46c0-17 13-26 28-26s28 9 28 26c0 7-13 10-28 10s-28-3-28-10Z" fill="#C57E1E"/><path d="M12 46c0-17 13-26 28-26s28 9 28 26c0 3-3 5-7 7-5-3-13-5-21-5s-16 2-21 5c-4-2-7-4-7-7Z" fill="#A8651A"/><path d="M28 26c3 11 6 18 9 24M40 23c2 12 2 20 3 28M52 26c-2 11-5 18-7 24" stroke="#5A3410" stroke-width="2" stroke-linecap="round" opacity=".5" fill="none"/></svg>`,
