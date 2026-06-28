@@ -175,17 +175,17 @@
   .overlay.open{opacity:1;visibility:visible}
   .drawer{
     position:fixed;top:0;left:0;height:100%;width:400px;max-width:90vw;background:var(--wheat);z-index:100;
-    transform:translateX(-100%);transition:transform .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;
+    transform:translateX(-100%);transition:transform .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;overflow-y:auto;
     box-shadow:20px 0 50px -20px rgba(0,0,0,.4);
   }
   .drawer.open{transform:translateX(0)}
-  .drawer-head{display:flex;justify-content:space-between;align-items:center;padding:24px 26px;border-bottom:1px solid var(--kraft)}
+  .drawer-head{display:flex;justify-content:space-between;align-items:center;padding:20px 26px;border-bottom:1px solid var(--kraft);position:sticky;top:0;z-index:5;background:var(--wheat)}
   .drawer-head h3{font-size:1.6rem}
   .x{background:none;border:none;cursor:pointer;color:var(--crust);font-size:1.6rem;line-height:1;padding:4px}
-  .drawer-body{flex:1;overflow-y:auto;padding:18px 26px}
-  .pig-banner{display:flex;flex-direction:column;align-items:center;padding:16px 26px 14px;border-bottom:1px dashed var(--kraft)}
-  .pig-banner svg{width:118px;height:auto}
-  .pig-banner p{margin-top:8px;font-family:var(--display);font-style:normal;font-weight:500;font-size:1.1rem;color:var(--crust-soft);text-align:center}
+  .drawer-body{flex:1 1 auto;min-height:0;overflow-y:auto;padding:18px 26px}
+  .pig-banner{display:flex;flex-direction:column;align-items:center;padding:10px 26px 10px;border-bottom:1px dashed var(--kraft)}
+  .pig-banner svg{width:84px;height:auto}
+  .pig-banner p{margin-top:6px;font-family:var(--display);font-style:normal;font-weight:500;font-size:1rem;color:var(--crust-soft);text-align:center}
   .empty{text-align:center;color:var(--crust-soft);margin-top:60px}
   .empty svg{width:70px;height:70px;color:var(--kraft);margin-bottom:14px}
   .line{display:flex;gap:14px;align-items:center;padding:15px 0;border-bottom:1px dashed var(--kraft)}
@@ -207,7 +207,9 @@
   .totals .tv{font-family:var(--display);font-weight:900;font-size:1.7rem}
   .checkout{width:100%;background:var(--jam);color:var(--cream);border:none;padding:16px;border-radius:44px;font-family:var(--body);font-weight:700;font-size:1.1rem;cursor:pointer;transition:background .2s ease}
   .checkout:hover{background:var(--jam-dark)}
-  .checkout:disabled{opacity:.4;cursor:not-allowed}
+  .checkout:disabled{opacity:.5;cursor:not-allowed}
+  .checkout-hint{text-align:center;font-size:.82rem;color:var(--jam);margin-top:8px;display:none}
+  .checkout-hint.show{display:block}
   .confirm{text-align:center;padding:50px 20px}
   .confirm svg{width:84px;height:84px;color:var(--herb);margin-bottom:18px}
   .confirm h3{font-size:1.9rem;margin-bottom:10px}
@@ -572,6 +574,7 @@
 
     <div class="totals-block" id="totalsBlock"></div>
     <button class="checkout" id="checkout" onclick="placeOrder()">ביצוע הזמנה</button>
+    <div class="checkout-hint" id="checkoutHint">בחרו יישוב למשלוח כדי להמשיך</div>
   </div>
 </aside>
 
@@ -920,7 +923,9 @@ function renderTotals(){
   }
   html += '<div class="trow big"><span>סה"כ</span><span>' + totalLabel + '</span></div>';
   document.getElementById('totalsBlock').innerHTML = html;
-  document.getElementById('checkout').disabled = (method === 'delivery' && d.state === 'none');
+  var needSettlement = (method === 'delivery' && d.state === 'none');
+  document.getElementById('checkout').disabled = needSettlement;
+  document.getElementById('checkoutHint').classList.toggle('show', needSettlement);
 }
 
 function orderSummary(){
