@@ -213,6 +213,18 @@
   .confirm h3{font-size:1.9rem;margin-bottom:10px}
   .confirm p{color:var(--crust-soft)}
 
+  .method{margin-bottom:14px}
+  .method label,.delivery label{font-size:.86rem;font-weight:700;letter-spacing:.04em;color:var(--crust-soft);display:block;margin-bottom:7px}
+  .method-opts{display:flex;gap:8px}
+  .method-btn{flex:1;padding:11px;border:1.5px solid var(--kraft);background:var(--cream);color:var(--crust);border-radius:10px;font-family:var(--body);font-weight:700;font-size:.95rem;cursor:pointer;transition:all .18s ease}
+  .method-btn.active{background:var(--crust);color:var(--cream);border-color:var(--crust)}
+  .delivery{margin-bottom:14px}
+  .delivery select,.delivery input{width:100%;padding:11px 14px;border-radius:10px;border:1.5px solid var(--kraft);background:var(--cream);font-family:var(--body);font-size:1rem;color:var(--crust)}
+  .totals-block{margin-bottom:16px}
+  .trow{display:flex;justify-content:space-between;align-items:baseline;font-size:.95rem;color:var(--crust-soft);margin-bottom:6px}
+  .trow.big{font-size:1.05rem;color:var(--crust);font-weight:700;border-top:1px solid var(--kraft);padding-top:10px;margin-top:4px}
+  .trow.big span:last-child{font-family:var(--display);font-weight:900;font-size:1.5rem}
+
   /* ---------- STORY VIDEO MODAL ---------- */
   .vid-overlay{position:fixed;inset:0;background:rgba(43,27,16,.8);z-index:120;display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;visibility:hidden;transition:opacity .3s ease}
   .vid-overlay.open{opacity:1;visibility:visible}
@@ -532,8 +544,16 @@
   </div>
   <div class="drawer-body" id="drawerBody"></div>
   <div class="drawer-foot" id="drawerFoot" style="display:none">
+    <div class="method">
+      <label>אופן קבלת ההזמנה</label>
+      <div class="method-opts">
+        <button type="button" class="method-btn active" id="mPickup" onclick="setMethod('pickup')">איסוף עצמי</button>
+        <button type="button" class="method-btn" id="mDelivery" onclick="setMethod('delivery')">משלוח</button>
+      </div>
+    </div>
+
     <div class="pickup">
-      <label for="pickupTime">שעת איסוף</label>
+      <label for="pickupTime" id="timeLabel">שעת איסוף</label>
       <select id="pickupTime">
         <option>היום · 8:00</option>
         <option>היום · 10:00</option>
@@ -542,8 +562,16 @@
         <option>מחר · 10:00</option>
       </select>
     </div>
-    <div class="totals"><span class="tl">סה"כ</span><span class="tv" id="total">0.00 ₪</span></div>
-    <button class="checkout" id="checkout" onclick="placeOrder()">ביצוע הזמנה לאיסוף</button>
+
+    <div class="delivery" id="deliveryBlock" style="display:none">
+      <label for="settlement">יישוב למשלוח</label>
+      <select id="settlement" onchange="updateCart()"></select>
+      <label for="address" style="margin-top:10px">כתובת למשלוח</label>
+      <input type="text" id="address" placeholder="רחוב, מספר בית, הערות גישה">
+    </div>
+
+    <div class="totals-block" id="totalsBlock"></div>
+    <button class="checkout" id="checkout" onclick="placeOrder()">ביצוע הזמנה</button>
   </div>
 </aside>
 
@@ -666,6 +694,47 @@ const ORDER_FORM_URL    = "https://docs.google.com/forms/d/e/1FAIpQLSc9D7FEzz7SY
 const ORDER_FORM_FIELDS = {"1":"203398739","5":"1131035232","8":"236903483"};
 const PICKUP_ENTRY      = "2076536786";
 
+/* ====== דמי משלוח לפי יישוב ======
+   חשוב: המרחקים הם הערכה בלבד! המחיר נקבע לפי מרחק נסיעה ממעוז חיים:
+   עד 10 ק"מ = 10 ₪ · 10–20 ק"מ = 18 ₪ · 20–25 ק"מ = 25 ₪.
+   נא לאמת את היישובים הקרובים לגבול-מחיר במפות Google ולעדכן את המספר כאן.
+   fee: 0 = חינם · מספר = דמי משלוח · null = "אחר" (עלות בתיאום טלפוני). */
+const DELIVERY_FEES = [
+  { name: 'מעוז חיים', fee: 0 },
+  // עד 10 ק"מ (10 ₪)
+  { name: 'בית שאן', fee: 10 },
+  { name: 'נווה איתן', fee: 10 },
+  { name: 'שדה נחום', fee: 10 },
+  { name: 'רשפים', fee: 10 },
+  { name: 'מסילות', fee: 10 },
+  { name: 'רחוב', fee: 10 },
+  { name: 'חמדיה', fee: 10 },
+  { name: 'נווה אור', fee: 10 },
+  { name: 'כפר רופין', fee: 10 },
+  { name: 'תל תאומים', fee: 10 },
+  { name: 'שדי תרומות', fee: 10 },
+  { name: 'עין הנצי"ב', fee: 10 },
+  { name: 'שדה אליהו', fee: 10 },
+  { name: 'שלוחות', fee: 10 },
+  // 10–20 ק"מ (18 ₪)
+  { name: 'טירת צבי', fee: 18 },
+  { name: 'בית יוסף', fee: 18 },
+  { name: 'ירדנה', fee: 18 },
+  { name: 'ניר דוד', fee: 18 },
+  { name: 'בית השיטה', fee: 18 },
+  { name: 'מירב', fee: 18 },
+  // 20–25 ק"מ (25 ₪)
+  { name: 'מנחמיה', fee: 25 },
+  { name: 'גבע', fee: 25 },
+  { name: 'בית אלפא', fee: 25 },
+  { name: 'חפצי בה', fee: 25 },
+  { name: 'תל יוסף', fee: 25 },
+  { name: 'עין חרוד', fee: 25 },
+  { name: 'כפר יחזקאל', fee: 25 },
+  // אחר
+  { name: 'יישוב אחר (מחוץ לאזור)', fee: null }
+];
+
 function openStory(e){
   if(e) e.preventDefault();
   const frame = document.getElementById('vidFrame');
@@ -787,8 +856,71 @@ function updateCart(){
       <div class="qty"><button onclick="changeQty(${id},-1)" aria-label="הסרת אחת">–</button><span>${q}</span><button onclick="changeQty(${id},1)" aria-label="הוספת אחת">+</button></div>
     </div>`;
   }).join('');
-  document.getElementById('total').textContent=cartTotal().toFixed(2)+' ₪';
   document.getElementById('checkout').disabled=false;
+  renderTotals();
+}
+
+/* ---- delivery / pickup ---- */
+let method = 'pickup';
+
+(function initDelivery(){
+  var sel = document.getElementById('settlement');
+  var html = '<option value="" data-fee="">בחרו יישוב…</option>';
+  DELIVERY_FEES.forEach(function(d){
+    var label = d.fee === 0 ? d.name + ' — חינם'
+              : d.fee === null ? d.name + ' — בתיאום'
+              : d.name + ' — משלוח ' + d.fee + ' ₪';
+    html += '<option value="' + d.name + '" data-fee="' + (d.fee === null ? 'null' : d.fee) + '">' + label + '</option>';
+  });
+  sel.innerHTML = html;
+})();
+
+function setMethod(m){
+  method = m;
+  document.getElementById('mPickup').classList.toggle('active', m === 'pickup');
+  document.getElementById('mDelivery').classList.toggle('active', m === 'delivery');
+  document.getElementById('deliveryBlock').style.display = (m === 'delivery') ? 'block' : 'none';
+  document.getElementById('timeLabel').textContent = (m === 'delivery') ? 'שעה מבוקשת' : 'שעת איסוף';
+  updateCart();
+}
+
+function deliveryInfo(){
+  if(method !== 'delivery') return { state: 'pickup', fee: 0, settlement: '' };
+  var sel = document.getElementById('settlement');
+  var opt = (sel && sel.selectedIndex >= 0) ? sel.options[sel.selectedIndex] : null;
+  var name = opt ? opt.value : '';
+  if(!name) return { state: 'none', fee: 0, settlement: '' };
+  var raw = opt.dataset.fee;
+  if(raw === 'null' || raw === '') return { state: 'tbd', fee: null, settlement: name };
+  return { state: 'ok', fee: Number(raw), settlement: name };
+}
+
+function grandTotal(){
+  var d = deliveryInfo();
+  return cartTotal() + (d.state === 'ok' ? d.fee : 0);
+}
+
+function trow(label, value){ return '<div class="trow"><span>' + label + '</span><span>' + value + '</span></div>'; }
+
+function renderTotals(){
+  var sub = cartTotal();
+  var d = deliveryInfo();
+  var html = '';
+  var totalLabel;
+  if(method === 'delivery'){
+    html += trow('פריטים', sub.toFixed(2) + ' ₪');
+    var feeText = d.state === 'ok' ? (d.fee === 0 ? 'חינם' : d.fee.toFixed(2) + ' ₪')
+                : d.state === 'tbd' ? 'בתיאום טלפוני'
+                : '—';
+    html += trow('משלוח', feeText);
+    totalLabel = d.state === 'tbd' ? (sub.toFixed(2) + ' ₪ + משלוח')
+               : (sub + (d.state === 'ok' ? d.fee : 0)).toFixed(2) + ' ₪';
+  } else {
+    totalLabel = sub.toFixed(2) + ' ₪';
+  }
+  html += '<div class="trow big"><span>סה"כ</span><span>' + totalLabel + '</span></div>';
+  document.getElementById('totalsBlock').innerHTML = html;
+  document.getElementById('checkout').disabled = (method === 'delivery' && d.state === 'none');
 }
 
 function orderSummary(){
@@ -797,7 +929,21 @@ function orderSummary(){
     const m=MENU.find(x=>x.id==id);
     return `${m.name} × ${q} — ${(m.price*q).toFixed(2)} ₪`;
   });
-  return `הזמנה חדשה — תנור ופירור\n\n${lines.join('\n')}\n\nסה"כ: ${cartTotal().toFixed(2)} ₪\nשעת איסוף: ${time}`;
+  const sub=cartTotal();
+  let s = `הזמנה חדשה — תנור ופירור\n\n${lines.join('\n')}\n\nסה"כ פריטים: ${sub.toFixed(2)} ₪`;
+  if(method==='delivery'){
+    const d=deliveryInfo();
+    const addr=(document.getElementById('address').value||'').trim();
+    s += `\n\nאופן קבלה: משלוח`;
+    s += `\nיישוב: ${d.settlement || '—'}`;
+    if(addr) s += `\nכתובת: ${addr}`;
+    s += `\nדמי משלוח: ${d.state==='ok' ? (d.fee===0?'חינם':d.fee+' ₪') : 'בתיאום טלפוני'}`;
+    s += `\nסה"כ לתשלום: ${d.state==='ok' ? (sub+d.fee).toFixed(2)+' ₪' : sub.toFixed(2)+' ₪ + משלוח בתיאום'}`;
+    s += `\nשעה מבוקשת: ${time}`;
+  } else {
+    s += `\n\nאופן קבלה: איסוף עצמי\nשעת איסוף: ${time}`;
+  }
+  return s;
 }
 
 function placeOrder(){
@@ -829,10 +975,14 @@ function placeOrder(){
 
   confirmed=true;
   document.getElementById('drawerFoot').style.display='none';
+  const dconf=deliveryInfo();
+  const methodLine = method==='delivery'
+    ? `משלוח ל${dconf.settlement || 'יישוב שנבחר'} · שעה מבוקשת: <strong>${time}</strong>`
+    : `איסוף עצמי · שעת איסוף: <strong>${time}</strong>`;
   body.innerHTML=`<div class="confirm">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
     <h3>פתחנו את טופס ההזמנה</h3>
-    <p>הטופס נפתח בלשונית חדשה — מלאו ושלחו אותו כדי להשלים את ההזמנה. שעת האיסוף שבחרת: <strong>${time}</strong>.<br>(העתקנו את פרטי ההזמנה גם ללוח, כך שאפשר פשוט להדביק.)</p>
+    <p>הטופס נפתח בלשונית חדשה — מלאו ושלחו אותו כדי להשלים את ההזמנה.<br>${methodLine}<br>(העתקנו את פרטי ההזמנה, כולל המשלוח, גם ללוח — אפשר פשוט להדביק.)</p>
   </div>`;
   for(const k in cart) delete cart[k];
   document.getElementById('cartCount').textContent='0';
@@ -855,7 +1005,7 @@ function updateCartBar(){
   if(n>0 && !confirmed){
     bar.classList.add('show');
     document.getElementById('cartBarCount').textContent=n;
-    document.getElementById('cartBarTotal').textContent=cartTotal().toFixed(2)+' ₪';
+    document.getElementById('cartBarTotal').textContent=grandTotal().toFixed(2)+' ₪';
   } else {
     bar.classList.remove('show');
   }
