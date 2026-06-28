@@ -173,6 +173,10 @@
   .foot-grid a:hover{color:var(--crust)}
   .foot-brand{font-family:var(--display);font-weight:900;font-size:1.6rem;margin-bottom:10px;display:flex;align-items:center;gap:10px}
   .foot-brand .mark{width:30px;height:30px;color:var(--jam)}
+  .foot-social{display:flex;gap:10px;margin-top:14px}
+  .soc-btn{display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:50%;border:1.5px solid var(--kraft);background:var(--cream);color:var(--crust);cursor:pointer;transition:all .18s ease}
+  .soc-btn:hover{border-color:var(--crust);color:var(--jam)}
+  .soc-btn svg{width:20px;height:20px}
   .foot-bottom{border-top:1px solid var(--kraft);margin-top:40px;padding-top:22px;text-align:center;font-size:.9rem;color:var(--crust-soft)}
 
   /* ---------- CART DRAWER ---------- */
@@ -508,6 +512,14 @@
     <div>
       <div class="foot-brand"><svg class="mark"><use href="#wheat-mark"/></svg>תנור ופירור</div>
       <p>מאפייה שכונתית בתנור עצים. נאפה טרי, נמכר באותו היום, אף פעם לא קפוא.</p>
+      <div class="foot-social">
+        <a class="soc-btn" id="igLink" href="#" target="_blank" rel="noopener" aria-label="עקבו אחרינו באינסטגרם" title="אינסטגרם">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+        </a>
+        <button class="soc-btn" onclick="shareSite()" aria-label="שיתוף הדף" title="שיתוף">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>
+        </button>
+      </div>
     </div>
     <div>
       <h4>בקרו אותנו</h4>
@@ -718,8 +730,12 @@ const ORDER_FORM_META   = {"method":"382999162","time":"1703118506","settlement"
 /* ====== כפתור וואטסאפ ======
    החליפו את המספר במספר הוואטסאפ שלכם, בפורמט בינלאומי: קוד מדינה ללא 0 וללא +.
    לדוגמה, 050-123-4567 בישראל => "972501234567". */
-const WHATSAPP_NUMBER = "972545410844";
+const WHATSAPP_NUMBER = "972500000000";
 const WHATSAPP_MSG    = "שלום! אשמח לפרטים על הזמנה מתנור ופירור.";
+
+/* ====== אינסטגרם ======
+   הכניסו את הכתובת של עמוד האינסטגרם שלכם. */
+const INSTAGRAM_URL   = "https://instagram.com/your_bakery";
 
 const DELIVERY_FEES = [
   { name: 'מעוז חיים', fee: 0 },
@@ -1065,6 +1081,21 @@ document.getElementById('appVersion').textContent = 'v' + APP_VERSION;
   var a=document.getElementById('waBtn');
   if(a) a.href='https://wa.me/'+WHATSAPP_NUMBER+'?text='+encodeURIComponent(WHATSAPP_MSG);
 })();
+
+/* ---- instagram + share ---- */
+(function initInstagram(){
+  var a=document.getElementById('igLink');
+  if(a) a.href=INSTAGRAM_URL;
+})();
+function shareSite(){
+  var data={ title:'תנור ופירור', text:'מאפייה בתנור עצים — הזמנות לאיסוף ומשלוח', url:location.href };
+  if(navigator.share){
+    navigator.share(data).catch(function(){});
+  } else {
+    try{ navigator.clipboard && navigator.clipboard.writeText(location.href); }catch(e){}
+    alert('הקישור הועתק! הדביקו אותו בסטורי או בהודעה באינסטגרם.');
+  }
+}
 
 /* ---- accessibility (נגישות) ---- */
 const A11Y_TOGGLES = { contrast:'a11y-contrast', grayscale:'a11y-grayscale', links:'a11y-links', readable:'a11y-readable', spacing:'a11y-spacing', nomotion:'a11y-nomotion' };
