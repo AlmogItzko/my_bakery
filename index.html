@@ -690,9 +690,9 @@ const STORY_VIDEO_ID = "PASTE_YOUTUBE_ID";
                        כשהוא מלא, הכמויות מהסל מתמלאות אוטומטית בטופס.
    PICKUP_ENTRY      – מזהה השדה של "שעת איסוף" (לא חובה).
    את שלושת הערכים מקבלים אוטומטית מהרצת הסקריפט bakery-form.gs (מודפסים ב-Logs). */
-const ORDER_FORM_URL    = "https://docs.google.com/forms/d/e/1FAIpQLSc9D7FEzz7SY5ulIpGSYOIEpZ36aGfEilnlvVSbpVHwTG4IoA/viewform";
-const ORDER_FORM_FIELDS = {"1":"203398739","5":"1131035232","8":"236903483"};
-const PICKUP_ENTRY      = "2076536786";
+const ORDER_FORM_URL    = "https://docs.google.com/forms/d/e/1FAIpQLSdsnPY53I426Ppfh-urtJViYO37Z0vWxN34AHguej35GZb9OQ/viewform";
+const ORDER_FORM_FIELDS = {"1":"637311779","5":"131423177","8":"2037127267"};
+const ORDER_FORM_META   = {"method":"382999162","time":"1703118506","settlement":"427038484","address":"2102477080","fee":"515938956"};
 
 /* ====== דמי משלוח לפי יישוב ======
    חשוב: המרחקים הם הערכה בלבד! המחיר נקבע לפי מרחק נסיעה ממעוז חיים:
@@ -962,13 +962,21 @@ function placeOrder(){
   }
 
   const summary=orderSummary();
+  const d=deliveryInfo();
   let url=ORDER_FORM_URL;
   const params=[];
   Object.entries(cart).forEach(([id,q])=>{
     const e=ORDER_FORM_FIELDS[id];
     if(e) params.push('entry.'+e+'='+encodeURIComponent(q));
   });
-  if(PICKUP_ENTRY) params.push('entry.'+PICKUP_ENTRY+'='+encodeURIComponent(document.getElementById('pickupTime').value));
+  const addField=(entry,val)=>{ if(entry && val!=='' && val!=null) params.push('entry.'+entry+'='+encodeURIComponent(val)); };
+  addField(ORDER_FORM_META.method, method==='delivery' ? 'משלוח' : 'איסוף עצמי');
+  addField(ORDER_FORM_META.time, time);
+  if(method==='delivery'){
+    addField(ORDER_FORM_META.settlement, d.settlement);
+    addField(ORDER_FORM_META.address, (document.getElementById('address').value||'').trim());
+    addField(ORDER_FORM_META.fee, d.state==='ok' ? String(d.fee) : (d.state==='tbd' ? 'בתיאום' : ''));
+  }
   if(params.length) url += (url.includes('?')?'&':'?') + 'usp=pp_url&' + params.join('&');
   try{ if(navigator.clipboard) navigator.clipboard.writeText(summary); }catch(e){}
   window.open(url,'_blank','noopener');
