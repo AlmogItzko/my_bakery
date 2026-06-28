@@ -182,7 +182,7 @@
   .drawer-head{display:flex;justify-content:space-between;align-items:center;padding:20px 26px;border-bottom:1px solid var(--kraft);position:sticky;top:0;z-index:5;background:var(--wheat)}
   .drawer-head h3{font-size:1.6rem}
   .x{background:none;border:none;cursor:pointer;color:var(--crust);font-size:1.6rem;line-height:1;padding:4px}
-  .drawer-body{flex:1 1 auto;min-height:0;overflow-y:auto;padding:18px 26px}
+  .drawer-body{flex:1 0 auto;padding:18px 26px}
   .pig-banner{display:flex;flex-direction:column;align-items:center;padding:10px 26px 10px;border-bottom:1px dashed var(--kraft)}
   .pig-banner svg{width:84px;height:auto}
   .pig-banner p{margin-top:6px;font-family:var(--display);font-style:normal;font-weight:500;font-size:1rem;color:var(--crust-soft);text-align:center}
@@ -518,7 +518,7 @@
     <h3>ההזמנה שלך</h3>
     <button class="x" onclick="closeCart()" aria-label="סגירה">&times;</button>
   </div>
-  <div class="pig-banner">
+  <div class="pig-banner" id="pigBanner">
     <svg viewBox="0 0 120 112" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="חזיר שמח">
       <!-- outer ears -->
       <path d="M34 42 L28 16 L52 33 Z" fill="#D98C8C"/>
@@ -843,6 +843,7 @@ function updateCart(){
   updateCartBar();
   const body=document.getElementById('drawerBody');
   const foot=document.getElementById('drawerFoot');
+  document.getElementById('pigBanner').style.display=(itemCount()===0 && !confirmed)?'flex':'none';
   if(confirmed) return;
   const ids=Object.keys(cart);
   if(ids.length===0){
@@ -988,6 +989,7 @@ function placeOrder(){
 
   confirmed=true;
   document.getElementById('drawerFoot').style.display='none';
+  document.getElementById('pigBanner').style.display='none';
   const dconf=deliveryInfo();
   const methodLine = method==='delivery'
     ? `משלוח ל${dconf.settlement || 'יישוב שנבחר'} · שעה מבוקשת: <strong>${time}</strong>`
