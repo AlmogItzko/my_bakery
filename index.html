@@ -23,7 +23,7 @@
     --display:'Frank Ruhl Libre',Georgia,serif;
     --body:'Assistant',-apple-system,system-ui,sans-serif;
   }
-  *{margin:0;padding:0;box-sizing:border-box}
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   html{scroll-behavior:smooth}
   body{
     font-family:var(--body);
@@ -226,6 +226,25 @@
   .vid-placeholder p{font-size:1.05rem;color:#D9C6A6;max-width:46ch;line-height:1.6}
   .vid-placeholder code{background:rgba(255,255,255,.12);padding:2px 7px;border-radius:5px;color:var(--cream);font-size:.9em;direction:ltr;display:inline-block}
 
+  /* ---------- MOBILE NAV + ORDER BAR ---------- */
+  .nav-actions{display:flex;align-items:center;gap:8px}
+  .menu-toggle{display:none;flex-direction:column;justify-content:center;gap:5px;width:42px;height:42px;background:none;border:none;cursor:pointer;padding:9px}
+  .menu-toggle span{display:block;height:2.5px;width:100%;background:var(--crust);border-radius:2px;transition:transform .3s ease,opacity .2s ease}
+  header.nav-open .menu-toggle span:nth-child(1){transform:translateY(7.5px) rotate(45deg)}
+  header.nav-open .menu-toggle span:nth-child(2){opacity:0}
+  header.nav-open .menu-toggle span:nth-child(3){transform:translateY(-7.5px) rotate(-45deg)}
+
+  .cart-bar{display:none;position:fixed;bottom:0;left:0;right:0;z-index:80;
+    background:var(--jam);color:var(--cream);border:none;cursor:pointer;font-family:var(--body);font-weight:700;font-size:1.05rem;
+    align-items:center;gap:12px;padding:16px 22px;padding-bottom:calc(16px + env(safe-area-inset-bottom));
+    box-shadow:0 -8px 24px -12px rgba(0,0,0,.45);transform:translateY(120%);transition:transform .3s ease}
+  .cart-bar.show{transform:translateY(0)}
+  .cart-bar-count{background:var(--honey);color:var(--crust);min-width:26px;height:26px;border-radius:20px;display:inline-flex;align-items:center;justify-content:center;padding:0 7px;font-size:.88rem;font-weight:700}
+  .cart-bar-total{margin-inline-start:auto}
+
+  /* keep anchored sections clear of the sticky header */
+  section[id],footer[id]{scroll-margin-top:86px}
+
   /* reveal */
   .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease}
   .reveal.in{opacity:1;transform:none}
@@ -238,14 +257,37 @@
     .menu-grid{grid-template-columns:repeat(2,1fr)}
     .gal-grid{grid-template-columns:repeat(2,1fr)}
     .foot-grid{grid-template-columns:1fr;gap:30px}
-    .navlinks{display:none}
+    .menu-toggle{display:flex}
+    .cart-bar{display:flex}
+    .navlinks{
+      position:absolute;top:70px;left:0;right:0;flex-direction:column;gap:0;align-items:stretch;
+      background:var(--wheat);border-bottom:1px solid var(--kraft);
+      max-height:0;overflow:hidden;transition:max-height .32s ease;box-shadow:0 16px 24px -18px var(--shadow);
+    }
+    header.nav-open .navlinks{max-height:60vh}
+    .navlinks a{padding:16px 28px;font-size:1.15rem;border-top:1px solid rgba(184,145,100,.3)}
+    .navlinks a::after{display:none}
   }
   @media(max-width:520px){
+    .wrap{padding:0 20px}
+    .section{padding:54px 0}
+    .hero{padding:48px 0 40px}
+    .hero h1{font-size:clamp(2.1rem,8.5vw,2.9rem)}
+    .hero .lede{font-size:1.08rem;margin:18px 0 26px}
+    .hero-cta{flex-direction:column;align-items:stretch;gap:12px}
+    .btn-primary{text-align:center}
+    .btn-ghost{align-self:flex-start}
+    .section-head h2{font-size:2rem}
     .menu-grid{grid-template-columns:1fr}
     .gal-grid{grid-template-columns:1fr}
     .tile.wide,.tile.tall{grid-column:auto;grid-row:auto;aspect-ratio:1}
-    .stats{gap:24px}
+    .stats{gap:20px;flex-wrap:wrap}
     .cart-btn span.lbl{display:none}
+    .cats{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;padding-bottom:6px;scrollbar-width:none}
+    .cats::-webkit-scrollbar{display:none}
+    .cat{flex:none}
+    .drawer{width:100%;max-width:100%}
+    .qty button{width:32px;height:32px;font-size:1.1rem}
   }
   @media(prefers-reduced-motion:reduce){
     *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
@@ -274,10 +316,13 @@
       <a href="#gallery">גלריה</a>
       <a href="#visit">בקרו אותנו</a>
     </nav>
-    <button class="cart-btn" onclick="openCart()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
-      <span class="lbl">הזמנה</span><span class="cart-count" id="cartCount">0</span>
-    </button>
+    <div class="nav-actions">
+      <button class="cart-btn" onclick="openCart()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+        <span class="lbl">הזמנה</span><span class="cart-count" id="cartCount">0</span>
+      </button>
+      <button class="menu-toggle" onclick="toggleNav()" aria-label="תפריט ניווט"><span></span><span></span><span></span></button>
+    </div>
   </div>
 </header>
 
@@ -446,6 +491,13 @@
   </div>
 </aside>
 
+<!-- MOBILE ORDER BAR -->
+<button class="cart-bar" id="cartBar" onclick="openCart()">
+  <span class="cart-bar-count" id="cartBarCount">0</span>
+  <span>צפייה בהזמנה</span>
+  <span class="cart-bar-total" id="cartBarTotal">0.00 ₪</span>
+</button>
+
 <!-- STORY VIDEO MODAL -->
 <div class="vid-overlay" id="vidOverlay" onclick="bgCloseStory(event)">
   <div class="vid-modal" role="dialog" aria-modal="true" aria-label="סרטון הסיפור שלנו">
@@ -460,6 +512,15 @@
    המזהה הוא החלק שאחרי "v=" בכתובת. למשל, עבור
    https://www.youtube.com/watch?v=abc123XYZ  המזהה הוא  abc123XYZ          */
 const STORY_VIDEO_ID = "PASTE_YOUTUBE_ID";
+
+/* ====== טופס הזמנות (זמני, במקום עמוד תשלום) ======
+   הדביקו כאן קישור ל-Google Form (או כל קישור Google אחר). בלחיצה על
+   "ביצוע הזמנה" הקישור ייפתח בלשונית חדשה במקום עמוד תשלום.
+   אם זה טופס Google ותרצו שפרטי ההזמנה ימולאו בו אוטומטית, מלאו גם את
+   ORDER_FIELD_ENTRY במזהה השדה (entry) של שאלת "פרטי ההזמנה".
+   להשגת המזהה: בעורך הטופס ⋮ → "קבל קישור מלא מראש". */
+const ORDER_FORM_URL    = "PASTE_GOOGLE_FORM_URL";
+const ORDER_FIELD_ENTRY = ""; // לא חובה. לדוגמה: "1234567890"
 
 function openStory(e){
   if(e) e.preventDefault();
@@ -570,6 +631,7 @@ function cartTotal(){return Object.entries(cart).reduce((s,[id,q])=>s+MENU.find(
 
 function updateCart(){
   document.getElementById('cartCount').textContent=itemCount();
+  updateCartBar();
   const body=document.getElementById('drawerBody');
   const foot=document.getElementById('drawerFoot');
   if(confirmed) return;
@@ -592,18 +654,48 @@ function updateCart(){
   document.getElementById('checkout').disabled=false;
 }
 
+function orderSummary(){
+  const time=document.getElementById('pickupTime').value;
+  const lines=Object.entries(cart).map(([id,q])=>{
+    const m=MENU.find(x=>x.id==id);
+    return `${m.name} × ${q} — ${(m.price*q).toFixed(2)} ₪`;
+  });
+  return `הזמנה חדשה — תנור ופירור\n\n${lines.join('\n')}\n\nסה"כ: ${cartTotal().toFixed(2)} ₪\nשעת איסוף: ${time}`;
+}
+
 function placeOrder(){
   if(itemCount()===0) return;
   const time=document.getElementById('pickupTime').value;
+  const body=document.getElementById('drawerBody');
+
+  // אם עדיין לא חובר טופס — מציגים הנחיה ולא מאבדים את הסל
+  if(!ORDER_FORM_URL || ORDER_FORM_URL==="PASTE_GOOGLE_FORM_URL"){
+    body.innerHTML=`<div class="confirm">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 13h6M9 17h6"/></svg>
+      <h3>צריך לחבר טופס</h3>
+      <p>פתחו את הקובץ, מצאו את <code style="direction:ltr;display:inline-block;background:rgba(0,0,0,.06);padding:1px 6px;border-radius:5px">ORDER_FORM_URL</code> בראש הסקריפט, והדביקו שם קישור ל-Google Form. מאז כל הזמנה תיפתח שם אוטומטית.</p>
+    </div>`;
+    return;
+  }
+
+  const summary=orderSummary();
+  let url=ORDER_FORM_URL;
+  if(ORDER_FIELD_ENTRY){
+    url += (url.includes('?')?'&':'?') + 'usp=pp_url&entry.' + ORDER_FIELD_ENTRY + '=' + encodeURIComponent(summary);
+  }
+  try{ if(navigator.clipboard) navigator.clipboard.writeText(summary); }catch(e){}
+  window.open(url,'_blank','noopener');
+
   confirmed=true;
   document.getElementById('drawerFoot').style.display='none';
-  document.getElementById('drawerBody').innerHTML=`<div class="confirm">
+  body.innerHTML=`<div class="confirm">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
-    <h3>ההזמנה בתנור!</h3>
-    <p>שמרנו לך את האפייה ל-<strong>${time}</strong>. התשלום בדלפק בעת האיסוף — נארוז ונחמם בשבילך.</p>
+    <h3>פתחנו את טופס ההזמנה</h3>
+    <p>הטופס נפתח בלשונית חדשה — מלאו ושלחו אותו כדי להשלים את ההזמנה. שעת האיסוף שבחרת: <strong>${time}</strong>.<br>(העתקנו את פרטי ההזמנה גם ללוח, כך שאפשר פשוט להדביק.)</p>
   </div>`;
   for(const k in cart) delete cart[k];
   document.getElementById('cartCount').textContent='0';
+  updateCartBar();
 }
 
 /* ---- drawer open/close ---- */
@@ -611,6 +703,22 @@ function openCart(){document.getElementById('drawer').classList.add('open');docu
 function closeCart(){document.getElementById('drawer').classList.remove('open');document.getElementById('overlay').classList.remove('open');}
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeCart();});
 updateCart();
+
+/* ---- mobile nav + order bar ---- */
+function toggleNav(){document.querySelector('header').classList.toggle('nav-open');}
+function closeNav(){document.querySelector('header').classList.remove('nav-open');}
+document.querySelectorAll('.navlinks a').forEach(a=>a.addEventListener('click',closeNav));
+function updateCartBar(){
+  const bar=document.getElementById('cartBar');
+  const n=itemCount();
+  if(n>0 && !confirmed){
+    bar.classList.add('show');
+    document.getElementById('cartBarCount').textContent=n;
+    document.getElementById('cartBarTotal').textContent=cartTotal().toFixed(2)+' ₪';
+  } else {
+    bar.classList.remove('show');
+  }
+}
 
 /* ---- scroll reveal ---- */
 const io=new IntersectionObserver((es)=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}}),{threshold:.12});
