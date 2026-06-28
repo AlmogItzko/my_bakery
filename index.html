@@ -735,9 +735,9 @@ const STORY_VIDEO_ID = "PASTE_YOUTUBE_ID";
                        כשהוא מלא, הכמויות מהסל מתמלאות אוטומטית בטופס.
    PICKUP_ENTRY      – מזהה השדה של "שעת איסוף" (לא חובה).
    את שלושת הערכים מקבלים אוטומטית מהרצת הסקריפט bakery-form.gs (מודפסים ב-Logs). */
-const ORDER_FORM_URL    = "https://docs.google.com/forms/d/e/1FAIpQLSdsnPY53I426Ppfh-urtJViYO37Z0vWxN34AHguej35GZb9OQ/viewform";
-const ORDER_FORM_FIELDS = {"1":"637311779","5":"131423177","8":"2037127267"};
-const ORDER_FORM_META   = {"method":"382999162","time":"1703118506","settlement":"427038484","address":"2102477080","fee":"515938956"};
+const ORDER_FORM_URL    = "https://docs.google.com/forms/d/e/1FAIpQLSdhXlpfIYNCC1X0OZkS0FZlK4n0NoyHuiihWe0w5uUPlaFfaA/viewform";
+const ORDER_FORM_FIELDS = {"1":"1969191750","5":"1036634691","8":"1762100444"};
+const ORDER_FORM_META   = {"method":"1363004872","time":"549783446","settlement":"1371866177","address":"1314880030","fee":"41116159","coupon":"1532525526","discount":"106784646"};
 
 /* ====== דמי משלוח לפי יישוב ======
    חשוב: המרחקים הם הערכה בלבד! המחיר נקבע לפי מרחק נסיעה ממעוז חיים:
@@ -758,8 +758,8 @@ const INSTAGRAM_URL   = "https://instagram.com/your_bakery";
    הוסיפו/שנו קופונים כאן. type: "percent" (אחוז) או "fixed" (סכום בשקלים).
    הקוד שמזין הלקוח אינו תלוי באותיות גדולות/קטנות. */
 const COUPONS = {
-  "WELCOME10": { type: "percent", value: 5 },
-  "PIROR20":   { type: "percent", value: 10 }
+  "WELCOME10": { type: "percent", value: 10 },  // 10% הנחה
+  "GIGI20":   { type: "percent",   value: 20 }   // 20 ₪ הנחה
 };
 
 const DELIVERY_FEES = [
@@ -1084,6 +1084,10 @@ function placeOrder(){
     addField(ORDER_FORM_META.settlement, d.settlement);
     addField(ORDER_FORM_META.address, (document.getElementById('address').value||'').trim());
     addField(ORDER_FORM_META.fee, d.state==='ok' ? String(d.fee) : (d.state==='tbd' ? 'בתיאום' : ''));
+  }
+  if(appliedCoupon){
+    addField(ORDER_FORM_META.coupon, appliedCoupon.code);
+    addField(ORDER_FORM_META.discount, couponDiscount(cartTotal()).toFixed(2));
   }
   if(params.length) url += (url.includes('?')?'&':'?') + 'usp=pp_url&' + params.join('&');
   try{ if(navigator.clipboard) navigator.clipboard.writeText(summary); }catch(e){}
