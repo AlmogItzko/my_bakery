@@ -248,6 +248,59 @@
   /* DEBUG version badge (temporary — safe to remove) */
   .version-badge{position:fixed;bottom:8px;left:8px;z-index:70;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.7rem;color:var(--crust);background:rgba(248,240,222,.85);border:1px solid var(--kraft);border-radius:6px;padding:3px 8px;opacity:.6;pointer-events:none;direction:ltr}
 
+  /* ---------- ACCESSIBILITY (נגישות) ---------- */
+  .a11y-toggle{position:fixed;bottom:24px;right:18px;z-index:110;width:52px;height:52px;border-radius:50%;background:#0b5fff;color:#fff;border:2px solid #fff;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(0,0,0,.35)}
+  .a11y-toggle:hover{background:#0848c9}
+  .a11y-toggle svg{width:30px;height:30px}
+  .a11y-panel{position:fixed;bottom:88px;right:18px;z-index:111;width:300px;max-width:calc(100vw - 36px);max-height:72vh;overflow-y:auto;background:#fff;color:#1a1a1a;border:2px solid #0b5fff;border-radius:14px;box-shadow:0 18px 44px rgba(0,0,0,.3);padding:18px;display:none;font-family:Arial,'Assistant',sans-serif;direction:rtl;text-align:right}
+  .a11y-panel.open{display:block}
+  .a11y-panel h2{font-family:inherit;font-size:1.2rem;margin:0 0 2px;color:#0b5fff}
+  .a11y-panel .a11y-sub{font-size:.8rem;color:#555;margin-bottom:14px}
+  .a11y-close{position:absolute;top:8px;left:10px;background:none;border:none;font-size:1.5rem;line-height:1;cursor:pointer;color:#555}
+  .a11y-fontrow{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;padding:10px 12px;border:1.5px solid #cbd5e1;border-radius:10px}
+  .a11y-fontrow span{font-weight:700;font-size:.9rem}
+  .a11y-fontrow .grp{display:flex;gap:6px}
+  .a11y-fontrow button{width:34px;height:34px;border-radius:8px;border:1.5px solid #0b5fff;background:#fff;color:#0b5fff;font-size:1.1rem;font-weight:700;cursor:pointer;font-family:inherit}
+  .a11y-fontrow button:hover{background:#eef4ff}
+  .a11y-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .a11y-btn{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border:1.5px solid #cbd5e1;border-radius:10px;background:#f8fafc;color:#1a1a1a;cursor:pointer;font-family:inherit;font-size:.82rem;font-weight:700;text-align:center}
+  .a11y-btn:hover{border-color:#0b5fff}
+  .a11y-btn.active{background:#0b5fff;color:#fff;border-color:#0b5fff}
+  .a11y-btn svg{width:22px;height:22px}
+  .a11y-reset{width:100%;margin-top:12px;padding:11px;border:none;border-radius:10px;background:#1a1a1a;color:#fff;font-family:inherit;font-weight:700;font-size:.92rem;cursor:pointer}
+  .a11y-stmt-link{display:block;width:100%;text-align:center;margin-top:10px;padding:4px;font-size:.86rem;color:#0b5fff;text-decoration:underline;cursor:pointer;background:none;border:none;font-family:inherit}
+  @media(max-width:880px){
+    .a11y-toggle{bottom:84px}
+    .a11y-panel{bottom:146px;max-height:60vh}
+  }
+
+  .a11y-stmt-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:130;display:none;align-items:center;justify-content:center;padding:20px}
+  .a11y-stmt-overlay.open{display:flex}
+  .a11y-stmt-modal{background:#fff;color:#1a1a1a;max-width:640px;width:100%;max-height:85vh;overflow-y:auto;border-radius:14px;padding:30px;position:relative;font-family:Arial,'Assistant',sans-serif;direction:rtl;text-align:right;line-height:1.75}
+  .a11y-stmt-modal h2{color:#0b5fff;font-family:inherit;margin-bottom:12px;font-size:1.5rem}
+  .a11y-stmt-modal h3{font-family:inherit;font-size:1.05rem;margin:18px 0 6px}
+  .a11y-stmt-modal p{margin-bottom:8px;font-size:.98rem}
+  .a11y-stmt-modal ul{padding-inline-start:22px;margin-bottom:8px}
+  .a11y-stmt-modal li{margin-bottom:5px;font-size:.98rem}
+  .a11y-stmt-modal .x{position:absolute;top:12px;left:14px;background:none;border:none;font-size:1.7rem;line-height:1;cursor:pointer;color:#555}
+  .a11y-stmt-modal .fillin{background:#fff3cd;padding:1px 5px;border-radius:4px}
+
+  /* accessibility state classes (apply to <html>) */
+  html.a11y-fs1{font-size:112%}
+  html.a11y-fs2{font-size:125%}
+  html.a11y-fs3{font-size:140%}
+  html.a11y-grayscale{filter:grayscale(100%)}
+  html.a11y-contrast body{background:#000 !important;color:#fff !important}
+  html.a11y-contrast *{background-color:transparent !important;background-image:none !important;color:#fff !important;border-color:#fff !important;box-shadow:none !important;text-shadow:none !important}
+  html.a11y-contrast a{color:#ff0 !important}
+  html.a11y-contrast button,html.a11y-contrast select,html.a11y-contrast .cat,html.a11y-contrast .btn-primary,html.a11y-contrast .cart-btn,html.a11y-contrast .checkout,html.a11y-contrast .add,html.a11y-contrast .a11y-btn,html.a11y-contrast .a11y-reset{background:#000 !important;color:#fff !important;border:2px solid #fff !important}
+  html.a11y-contrast .a11y-btn.active{background:#fff !important;color:#000 !important}
+  html.a11y-links a{text-decoration:underline !important;outline:2px solid currentColor;outline-offset:2px}
+  html.a11y-readable *{font-family:Arial,'Assistant',sans-serif !important;font-style:normal !important}
+  html.a11y-readable h1,html.a11y-readable h2,html.a11y-readable h3,html.a11y-readable .brand,html.a11y-readable .foot-brand{font-weight:700 !important}
+  html.a11y-spacing *{line-height:1.85 !important;letter-spacing:.04em !important;word-spacing:.1em !important}
+  html.a11y-nomotion *,html.a11y-nomotion *::before,html.a11y-nomotion *::after{animation:none !important;transition:none !important;scroll-behavior:auto !important}
+
   /* reveal */
   .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease}
   .reveal.in{opacity:1;transform:none}
@@ -509,6 +562,87 @@
   </div>
 </div>
 
+<!-- ACCESSIBILITY (נגישות) -->
+<button class="a11y-toggle" id="a11yToggle" onclick="a11yTogglePanel()" aria-label="פתיחת תפריט נגישות" aria-expanded="false" aria-controls="a11yPanel">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="4" r="1.7" fill="currentColor" stroke="none"/><path d="M4.5 8c2.4 1 4.9 1.5 7.5 1.5S17.1 9 19.5 8"/><path d="M12 9.3V15"/><path d="M8.7 21l3.3-6 3.3 6"/></svg>
+</button>
+
+<aside class="a11y-panel" id="a11yPanel" role="region" aria-label="תפריט נגישות">
+  <button class="a11y-close" onclick="a11yTogglePanel(false)" aria-label="סגירת תפריט נגישות">&times;</button>
+  <h2>תפריט נגישות</h2>
+  <div class="a11y-sub">התאמת האתר לצרכים שלך</div>
+
+  <div class="a11y-fontrow">
+    <span>גודל טקסט</span>
+    <div class="grp">
+      <button onclick="a11yFontStep(-1)" aria-label="הקטנת טקסט">&minus;</button>
+      <button onclick="a11yFontStep(1)" aria-label="הגדלת טקסט">+</button>
+    </div>
+  </div>
+
+  <div class="a11y-grid">
+    <button class="a11y-btn" aria-pressed="false" onclick="a11yToggleFeature('contrast',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v18" fill="currentColor"/></svg>
+      ניגודיות גבוהה
+    </button>
+    <button class="a11y-btn" aria-pressed="false" onclick="a11yToggleFeature('grayscale',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor"/></svg>
+      גווני אפור
+    </button>
+    <button class="a11y-btn" aria-pressed="false" onclick="a11yToggleFeature('links',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg>
+      הדגשת קישורים
+    </button>
+    <button class="a11y-btn" aria-pressed="false" onclick="a11yToggleFeature('readable',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 19l6-14 6 14M8.5 14h7"/></svg>
+      פונט קריא
+    </button>
+    <button class="a11y-btn" aria-pressed="false" onclick="a11yToggleFeature('spacing',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      ריווח טקסט
+    </button>
+    <button class="a11y-btn" aria-pressed="false" onclick="a11yToggleFeature('nomotion',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg>
+      עצירת אנימציות
+    </button>
+  </div>
+
+  <button class="a11y-reset" onclick="a11yReset()">איפוס הגדרות נגישות</button>
+  <button class="a11y-stmt-link" onclick="a11yOpenStatement()">הצהרת נגישות</button>
+</aside>
+
+<!-- ACCESSIBILITY STATEMENT -->
+<div class="a11y-stmt-overlay" id="a11yStmt" onclick="a11yStmtBg(event)">
+  <div class="a11y-stmt-modal" role="dialog" aria-modal="true" aria-label="הצהרת נגישות">
+    <button class="x" onclick="a11yCloseStatement()" aria-label="סגירה">&times;</button>
+    <h2>הצהרת נגישות</h2>
+    <p>במאפיית <strong>תנור ופירור</strong> אנו רואים חשיבות רבה במתן שירות שוויוני לכלל הלקוחות, ופועלים כדי שאתר האינטרנט שלנו יהיה נגיש לאנשים עם מוגבלות.</p>
+
+    <h3>רמת הנגישות באתר</h3>
+    <p>האתר נבנה בהשתדלות לעמוד בדרישות תקנות שוויון זכויות לאנשים עם מוגבלות (התאמות נגישות לשירות), התשע"ג–2013, ובהתאם להנחיות תקן ישראלי ת"י 5568 ברמת AA, המבוסס על הנחיות WCAG 2.0 הבינלאומיות.</p>
+
+    <h3>התאמות שבוצעו</h3>
+    <ul>
+      <li>תפריט נגישות הכולל: הגדלת טקסט, ניגודיות גבוהה, גווני אפור, הדגשת קישורים, פונט קריא, ריווח טקסט והפסקת אנימציות.</li>
+      <li>מבנה כותרות היררכי וטקסט חלופי לתמונות.</li>
+      <li>תמיכה בניווט וגלישה במבנה האתר.</li>
+    </ul>
+
+    <h3>החרגות ומגבלות ידועות</h3>
+    <p>למרות מאמצינו להנגיש את כלל חלקי האתר, ייתכן שיימצאו רכיבים שטרם הונגשו במלואם. אנו ממשיכים לפעול לשיפור הנגישות באופן שוטף.</p>
+
+    <h3>יצירת קשר בנושא נגישות</h3>
+    <p>אם נתקלתם בקושי בגלישה או בבעיית נגישות, נשמח שתעדכנו את רכז/ת הנגישות שלנו ונטפל בכך בהקדם:</p>
+    <p>
+      שם: <span class="fillin">[שם רכז/ת הנגישות]</span><br>
+      טלפון: <span class="fillin">[מספר טלפון]</span><br>
+      דוא"ל: <span class="fillin">[כתובת אימייל]</span>
+    </p>
+
+    <p>תאריך עדכון ההצהרה: <span class="fillin">[תאריך]</span></p>
+  </div>
+</div>
+
 <!-- DEBUG VERSION BADGE (זמני — אפשר למחוק בקלות) -->
 <div class="version-badge" id="appVersion" aria-hidden="true"></div>
 
@@ -733,6 +867,40 @@ document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 
 /* גרסה לדיבוג */
 document.getElementById('appVersion').textContent = 'v' + APP_VERSION;
+
+/* ---- accessibility (נגישות) ---- */
+const A11Y_TOGGLES = { contrast:'a11y-contrast', grayscale:'a11y-grayscale', links:'a11y-links', readable:'a11y-readable', spacing:'a11y-spacing', nomotion:'a11y-nomotion' };
+let a11yFont = 0;
+function a11yApplyFont(){
+  const h=document.documentElement;
+  h.classList.remove('a11y-fs1','a11y-fs2','a11y-fs3');
+  if(a11yFont>0) h.classList.add('a11y-fs'+a11yFont);
+}
+function a11yFontStep(d){ a11yFont=Math.max(0,Math.min(3,a11yFont+d)); a11yApplyFont(); }
+function a11yToggleFeature(key,btn){
+  const on=document.documentElement.classList.toggle(A11Y_TOGGLES[key]);
+  if(btn){ btn.classList.toggle('active',on); btn.setAttribute('aria-pressed', on?'true':'false'); }
+}
+function a11yReset(){
+  const h=document.documentElement;
+  Object.values(A11Y_TOGGLES).forEach(c=>h.classList.remove(c));
+  h.classList.remove('a11y-fs1','a11y-fs2','a11y-fs3'); a11yFont=0;
+  document.querySelectorAll('.a11y-btn.active').forEach(b=>{ b.classList.remove('active'); b.setAttribute('aria-pressed','false'); });
+}
+function a11yTogglePanel(force){
+  const p=document.getElementById('a11yPanel'), t=document.getElementById('a11yToggle');
+  const open = (force===undefined) ? !p.classList.contains('open') : force;
+  p.classList.toggle('open', open);
+  t.setAttribute('aria-expanded', open?'true':'false');
+}
+function a11yOpenStatement(){ document.getElementById('a11yStmt').classList.add('open'); }
+function a11yCloseStatement(){ document.getElementById('a11yStmt').classList.remove('open'); }
+function a11yStmtBg(e){ if(e.target.id==='a11yStmt') a11yCloseStatement(); }
+document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ a11yTogglePanel(false); a11yCloseStatement(); } });
+document.addEventListener('click', e=>{
+  const p=document.getElementById('a11yPanel'), t=document.getElementById('a11yToggle');
+  if(p && p.classList.contains('open') && !p.contains(e.target) && !t.contains(e.target)) a11yTogglePanel(false);
+});
 </script>
 </body>
 </html>
