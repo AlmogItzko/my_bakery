@@ -528,9 +528,9 @@ const STORY_VIDEO_ID = "PASTE_YOUTUBE_ID";
                        כשהוא מלא, הכמויות מהסל מתמלאות אוטומטית בטופס.
    PICKUP_ENTRY      – מזהה השדה של "שעת איסוף" (לא חובה).
    את שלושת הערכים מקבלים אוטומטית מהרצת הסקריפט bakery-form.gs (מודפסים ב-Logs). */
-const ORDER_FORM_URL    = "https://docs.google.com/forms/d/e/1FAIpQLSfGolT6G6ZGfK8NEAQZtdqiLfNReWOl4UpDeSUPdpFWRCLnuw/viewform";
-const ORDER_FORM_FIELDS = {};   // לדוגמה: {"1":"111111","2":"222222", ...}
-const PICKUP_ENTRY      = "";   // לדוגמה: "999999"
+const ORDER_FORM_URL    = "https://docs.google.com/forms/d/e/1FAIpQLScUaOPRNt2J2wyMVUYZHj8YMzFvAFEo32Vq70zphKb-5DZxvg/viewform";
+const ORDER_FORM_FIELDS = {"1":"1675555690","5":"391934634","8":"999923919"};
+const PICKUP_ENTRY      = "1199954847";
 
 function openStory(e){
   if(e) e.preventDefault();
@@ -565,15 +565,8 @@ const ICONS = {
 /* ---- menu data ---- */
 const MENU = [
   {id:1, cat:'לחמים', name:'מחמצת כפרית', price:9, icon:'loaf', desc:'הדגל שלנו. מחמצת שיפון בת 48 שעות, קרום שלפוחיות ונקבוביות פתוחה.'},
-  {id:2, cat:'לחמים', name:'באגט שומשום', price:5, icon:'baguette', desc:'פריך, קרום דק, מגולגל בשומשום קלוי. הכי טעים בשעה הראשונה.'},
-  {id:3, cat:'לחמים', name:'לחם דגנים עם גרעינים', price:10, icon:'loaf', desc:'פשתן, דוחן וחמנייה בכיכר רכה ומלאה.'},
-  {id:4, cat:'לחמים', name:'לחמניות חלב רכות', price:6, icon:'bun', desc:'רביעייה אוורירית, מוברשת בחמאת דבש. מצוין לכריכים.'},
   {id:5, cat:'עוגות', name:'עוגת שמן זית ולימון', price:7, icon:'cake', desc:'פרוסה אישית רכה עם זיגוג לימון מרענן.'},
-  {id:6, cat:'עוגות', name:'עוגת גזר ואגוזים', price:7.5, icon:'cake', desc:'פרוסת שכבות מתובלת עם אגוזי מלך קלויים וקרם גבינה.'},
-  {id:7, cat:'עוגות', name:'עוגת פאדג\' שוקולד מריר', price:8, icon:'cake', desc:'עמוקה, עשירה ופאדג\'ית עם ציפוי גנאש מבריק.'},
   {id:8, cat:'עוגיות', name:'עוגיית שוקולד ומלח ים', price:3.5, icon:'cookie', desc:'בצק חמאה חומה, שלוליות שוקולד מריר ומלח פתיתים מעל.'},
-  {id:9, cat:'עוגיות', name:'עוגיית שיבולת שועל וצימוקים', price:3, icon:'cookie', desc:'שיבולת שועל לעיסה, צימוקים שמנמנים ונגיעת קינמון.'},
-  {id:10, cat:'עוגיות', name:'סניקרדודל בחמאה חומה', price:3, icon:'cookie', desc:'רכה וחמצמצה, מגולגלת בסוכר קינמון.'},
 ];
 
 const cart = {};
