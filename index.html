@@ -109,6 +109,11 @@
   .section-head p{color:var(--crust-soft);font-size:1.1rem}
 
   .cats{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:40px}
+  .menu-search{max-width:420px;margin:0 auto 22px;position:relative}
+  .menu-search input{width:100%;padding:13px 46px 13px 18px;border-radius:30px;border:1.5px solid var(--kraft);background:var(--cream);font-family:var(--body);font-size:1rem;color:var(--crust)}
+  .menu-search input:focus{outline:none;border-color:var(--honey)}
+  .menu-search svg{position:absolute;right:16px;top:50%;transform:translateY(-50%);width:20px;height:20px;color:var(--crust-soft);pointer-events:none}
+  .menu-grid .no-results{grid-column:1/-1;text-align:center;color:var(--crust-soft);padding:30px;font-size:1.05rem}
   .cat{background:transparent;border:1.5px solid var(--kraft);color:var(--crust-soft);
     padding:9px 22px;border-radius:30px;font-family:var(--body);font-weight:700;font-size:.95rem;cursor:pointer;transition:all .2s ease}
   .cat:hover{border-color:var(--crust)}
@@ -162,7 +167,7 @@
 
   /* ---------- FOOTER ---------- */
   footer{background:var(--wheat-deep);border-top:1px solid var(--kraft);padding:58px 0 30px}
-  .foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:40px}
+  .foot-grid{display:grid;grid-template-columns:1.6fr 1fr;gap:40px}
   .foot-grid h4{font-family:var(--body);font-weight:700;font-size:.92rem;letter-spacing:.06em;color:var(--jam);margin-bottom:16px}
   .foot-grid p,.foot-grid a{color:var(--crust-soft);font-size:1rem;display:block;margin-bottom:7px}
   .foot-grid a:hover{color:var(--crust)}
@@ -409,7 +414,6 @@
           <button class="btn-primary" onclick="document.getElementById('menu').scrollIntoView()">הזמנה לאיסוף</button>
           <a href="#story" class="btn-ghost" onclick="openStory(event)">הסיפור שלנו</a>
         </div>
-        <div class="hours-chip"><span class="dot"></span> פתוח היום · 7:00–14:00 (או עד שהמדפים מתרוקנים)</div>
       </div>
       <div class="loaf-card reveal">
         <span class="tag">האפייה של היום</span>
@@ -436,6 +440,10 @@
         <p>הכול נאפה בבוקר האיסוף. הזמינו עד 9:00 ונשמור לכם מנה, עדיין חמה.</p>
       </div>
 
+      <div class="menu-search reveal">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <input type="text" id="menuSearch" placeholder="חיפוש מאפה…" oninput="onSearch(this.value)" aria-label="חיפוש מאפה">
+      </div>
       <div class="cats reveal" id="cats"></div>
       <div class="menu-grid" id="menuGrid"></div>
     </div>
@@ -500,12 +508,6 @@
       <p>רחוב הריחיים 114<br>תל אביב-יפו</p>
       <a href="tel:+97235550148">03-555-0148</a>
       <a href="mailto:hello@tanurupeyrur.co.il">hello@tanurupeyrur.co.il</a>
-    </div>
-    <div>
-      <h4>שעות פעילות</h4>
-      <p>שלישי–שישי · 7:00–14:00</p>
-      <p>שבת–ראשון · 7:00–15:00</p>
-      <p>שני · התנור נח</p>
     </div>
   </div>
   <div class="wrap foot-bottom">© 2026 מאפיית תנור ופירור · הזמנות מראש נסגרות ב-9:00 לאיסוף באותו היום</div>
@@ -789,9 +791,17 @@ catWrap.querySelectorAll('.cat').forEach(b=>b.onclick=()=>{
   renderMenu();
 });
 
+let searchQuery = '';
+function onSearch(v){ searchQuery=(v||'').trim(); renderMenu(); }
+
 function renderMenu(){
   const grid=document.getElementById('menuGrid');
-  const items=MENU.filter(m=>activeCat==='הכול'||m.cat===activeCat);
+  const q=searchQuery;
+  const items=MENU.filter(m=>(activeCat==='הכול'||m.cat===activeCat) && (q===''||m.name.indexOf(q)!==-1||(m.desc&&m.desc.indexOf(q)!==-1)));
+  if(items.length===0){
+    grid.innerHTML='<p class="no-results">לא נמצאו מאפים שתואמים לחיפוש.</p>';
+    return;
+  }
   grid.innerHTML=items.map(m=>`
     <article class="card">
       <div class="art">${ICONS[m.icon]}</div>
