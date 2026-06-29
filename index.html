@@ -226,6 +226,8 @@
   .confirm svg{width:84px;height:84px;color:var(--herb);margin-bottom:18px}
   .confirm h3{font-size:1.9rem;margin-bottom:10px}
   .confirm p{color:var(--crust-soft)}
+  .form-open{display:inline-block;background:var(--crust);color:var(--cream);text-decoration:none;border-radius:30px;padding:13px 30px;font-weight:700;font-size:1.05rem;margin:8px 0 4px;transition:background .2s ease}
+  .form-open:hover{background:#3d291a}
   .bit-pay{margin-top:20px;background:var(--cream);border:1px dashed var(--honey);border-radius:12px;padding:14px 16px;text-align:right}
   .bit-row{display:flex;justify-content:space-between;align-items:baseline;font-weight:700;margin-bottom:6px}
   .bit-row strong{font-family:var(--display);font-size:1.3rem;color:var(--jam)}
@@ -772,7 +774,6 @@ const INSTAGRAM_URL   = "https://instagram.com/your_bakery";
 const BIT_PHONE = "054-541-0844";
 const BIT_LINK  = "https://play.google.com/store/apps/details?id=com.bnhp.payments.paymentsapp";
 
-
 /* ====== קודי קופון ======
    הוסיפו/שנו קופונים כאן. type: "percent" (אחוז) או "fixed" (סכום בשקלים).
    הקוד שמזין הלקוח אינו תלוי באותיות גדולות/קטנות. */
@@ -1110,7 +1111,6 @@ function placeOrder(){
   }
   if(params.length) url += (url.includes('?')?'&':'?') + 'usp=pp_url&' + params.join('&');
   try{ if(navigator.clipboard) navigator.clipboard.writeText(summary); }catch(e){}
-  window.open(url,'_blank','noopener');
 
   confirmed=true;
   document.getElementById('drawerFoot').style.display='none';
@@ -1130,8 +1130,9 @@ function placeOrder(){
     </div>`;
   body.innerHTML=`<div class="confirm">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
-    <h3>פתחנו את טופס ההזמנה</h3>
-    <p>הטופס נפתח בלשונית חדשה — מלאו ושלחו אותו כדי להשלים את ההזמנה.<br>${methodLine}<br>(העתקנו את פרטי ההזמנה, כולל המשלוח, גם ללוח — אפשר פשוט להדביק.)</p>
+    <h3>כמעט סיימתם</h3>
+    <p>${methodLine}<br><span style="font-size:.9rem">להשלמת ההזמנה מלאו ושלחו את הטופס. פרטי ההזמנה הועתקו ללוח — אפשר פשוט להדביק.</span></p>
+    <a href="${url}" target="_blank" rel="noopener" class="form-open">מלאו את טופס ההזמנה</a>
     ${bitBlock}
   </div>`;
   for(const k in cart) delete cart[k];
