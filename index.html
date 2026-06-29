@@ -117,6 +117,14 @@
   .menu-search input:focus{outline:none;border-color:var(--honey)}
   .menu-search svg{position:absolute;right:16px;top:50%;transform:translateY(-50%);width:20px;height:20px;color:var(--crust-soft);pointer-events:none}
   .menu-grid .no-results{grid-column:1/-1;text-align:center;color:var(--crust-soft);padding:30px;font-size:1.05rem}
+  .card{position:relative}
+  .dod-badge{position:absolute;top:12px;inset-inline-start:12px;background:var(--jam);color:var(--cream);font-size:.72rem;font-weight:700;padding:4px 11px;border-radius:20px;z-index:2;letter-spacing:.03em}
+  .card.dod{border:2px solid var(--jam)}
+  .card.sold{opacity:.6}
+  .card.sold .art{filter:grayscale(.7)}
+  .add:disabled{background:var(--kraft);cursor:not-allowed}
+  .announce{background:var(--honey);color:#2B1B10;text-align:center;padding:9px 16px;font-weight:600;font-size:.95rem}
+  .order-note{background:var(--cream);border:1px solid var(--kraft);border-radius:10px;padding:10px 12px;font-size:.85rem;color:var(--crust-soft);margin-bottom:12px;line-height:1.5}
   .cat{background:transparent;border:1.5px solid var(--kraft);color:var(--crust-soft);
     padding:9px 22px;border-radius:30px;font-family:var(--body);font-weight:700;font-size:.95rem;cursor:pointer;transition:all .2s ease}
   .cat:hover{border-color:var(--crust)}
@@ -400,6 +408,7 @@
 </style>
 </head>
 <body>
+<div id="announceBar" class="announce" style="display:none"></div>
 
 <!-- wheat mark reused -->
 <svg style="display:none">
@@ -617,6 +626,7 @@
       <input type="text" id="address" placeholder="רחוב, מספר בית, הערות גישה">
     </div>
 
+    <div class="order-note" id="orderNote" style="display:none"></div>
     <div class="coupon">
       <label for="couponCode">קוד קופון</label>
       <div class="coupon-row">
@@ -783,6 +793,13 @@ const COUPONS = {
   "PIROR20":   { type: "fixed",   value: 20 }   // 20 ₪ הנחה
 };
 
+/* ====== תוכן מגוגל שיטס ======
+   CONTENT_SHEET_ID — מזהה גיליון התוכן (מתוך כתובת הגיליון). ריק = שימוש בערכי ברירת המחדל שבקוד.
+   הגיליון חייב להיות משותף ל"כל מי שיש לו הקישור: צפייה". */
+const CONTENT_SHEET_ID = "12kdcvXqnZSrIrL4oXe0BTZNxkGXWQpGBFRY0klbXC4s";
+const MENU_TAB     = "תפריט";
+const SETTINGS_TAB = "הגדרות";
+
 const DELIVERY_FEES = [
   { name: 'מעוז חיים', fee: 0 },
   // עד 10 ק"מ (10 ₪)
@@ -850,7 +867,7 @@ const ICONS = {
 };
 
 /* ---- menu data ---- */
-const MENU = [
+let MENU = [
   {id:1, cat:'לחמים', name:'מחמצת כפרית', price:9, icon:'loaf', desc:'הדגל שלנו. מחמצת שיפון בת 48 שעות, קרום שלפוחיות ונקבוביות פתוחה.'},
   {id:5, cat:'עוגות', name:'עוגת שמן זית ולימון', price:7, icon:'cake', desc:'פרוסה אישית רכה עם זיגוג לימון מרענן.'},
   {id:8, cat:'עוגיות', name:'עוגיית שוקולד ומלח ים', price:3.5, icon:'cookie', desc:'בצק חמאה חומה, שלוליות שוקולד מריר ומלח פתיתים מעל.'},
@@ -860,15 +877,18 @@ const cart = {};
 let confirmed = false;
 
 /* ---- render menu ---- */
-const cats = ['הכול', ...new Set(MENU.map(m=>m.cat))];
 let activeCat = 'הכול';
 const catWrap = document.getElementById('cats');
-catWrap.innerHTML = cats.map(c=>`<button class="cat${c===activeCat?' active':''}" data-cat="${c}">${c}</button>`).join('');
-catWrap.querySelectorAll('.cat').forEach(b=>b.onclick=()=>{
-  activeCat=b.dataset.cat;
-  catWrap.querySelectorAll('.cat').forEach(x=>x.classList.toggle('active',x.dataset.cat===activeCat));
-  renderMenu();
-});
+function renderCats(){
+  const cats = ['הכול', ...new Set(MENU.map(m=>m.cat))];
+  catWrap.innerHTML = cats.map(c=>`<button class="cat${c===activeCat?' active':''}" data-cat="${c}">${c}</button>`).join('');
+  catWrap.querySelectorAll('.cat').forEach(b=>b.onclick=()=>{
+    activeCat=b.dataset.cat;
+    catWrap.querySelectorAll('.cat').forEach(x=>x.classList.toggle('active',x.dataset.cat===activeCat));
+    renderMenu();
+  });
+}
+renderCats();
 
 let searchQuery = '';
 function onSearch(v){ searchQuery=(v||'').trim(); renderMenu(); }
@@ -876,23 +896,28 @@ function onSearch(v){ searchQuery=(v||'').trim(); renderMenu(); }
 function renderMenu(){
   const grid=document.getElementById('menuGrid');
   const q=searchQuery;
-  const items=MENU.filter(m=>(activeCat==='הכול'||m.cat===activeCat) && (q===''||m.name.indexOf(q)!==-1||(m.desc&&m.desc.indexOf(q)!==-1)));
+  let items=MENU.filter(m=>(activeCat==='הכול'||m.cat===activeCat) && (q===''||m.name.indexOf(q)!==-1||(m.desc&&m.desc.indexOf(q)!==-1)));
+  items=items.slice().sort((a,b)=>(b.dishOfDay?1:0)-(a.dishOfDay?1:0));
   if(items.length===0){
     grid.innerHTML='<p class="no-results">לא נמצאו מאפים שתואמים לחיפוש.</p>';
     return;
   }
-  grid.innerHTML=items.map(m=>`
-    <article class="card">
-      <div class="art">${ICONS[m.icon]}</div>
+  grid.innerHTML=items.map(m=>{
+    const sold = m.available===false;
+    const badge = m.dishOfDay ? '<span class="dod-badge">מנת היום</span>' : '';
+    const btn = sold
+      ? '<button class="add" disabled>אזל להיום</button>'
+      : `<button class="add" data-id="${m.id}" onclick="addItem(${m.id},this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>הוספה להזמנה</button>`;
+    return `<article class="card${sold?' sold':''}${m.dishOfDay?' dod':''}">
+      ${badge}
+      <div class="art">${ICONS[m.icon]||ICONS.loaf}</div>
       <div class="body">
-        <h3>${m.name}<span class="price">${m.price.toFixed(2)} ₪</span></h3>
+        <h3>${m.name}<span class="price">${Number(m.price).toFixed(2)} ₪</span></h3>
         <p class="desc">${m.desc}</p>
-        <button class="add" data-id="${m.id}" onclick="addItem(${m.id},this)">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
-          הוספה להזמנה
-        </button>
+        ${btn}
       </div>
-    </article>`).join('');
+    </article>`;
+  }).join('');
 }
 renderMenu();
 
@@ -955,6 +980,16 @@ function updateCart(){
 
 /* ---- delivery / pickup ---- */
 let method = 'pickup';
+let pickupTimes = ['היום · 8:00','היום · 10:00','היום · 12:00','מחר · 8:00','מחר · 10:00'];
+let deliveryTimes = pickupTimes.slice();
+function applyTimeOptions(){
+  const sel=document.getElementById('pickupTime');
+  if(!sel) return;
+  const cur=sel.value;
+  const list=(method==='delivery')?deliveryTimes:pickupTimes;
+  sel.innerHTML=list.map(t=>`<option>${t}</option>`).join('');
+  if(list.indexOf(cur)>=0) sel.value=cur;
+}
 
 (function initDelivery(){
   var sel = document.getElementById('settlement');
@@ -974,6 +1009,7 @@ function setMethod(m){
   document.getElementById('mDelivery').classList.toggle('active', m === 'delivery');
   document.getElementById('deliveryBlock').style.display = (m === 'delivery') ? 'block' : 'none';
   document.getElementById('timeLabel').textContent = (m === 'delivery') ? 'שעה מבוקשת' : 'שעת איסוף';
+  applyTimeOptions();
   updateCart();
 }
 
@@ -1238,6 +1274,59 @@ document.addEventListener('click', e=>{
   const p=document.getElementById('a11yPanel'), t=document.getElementById('a11yToggle');
   if(p && p.classList.contains('open') && !p.contains(e.target) && !t.contains(e.target)) a11yTogglePanel(false);
 });
+/* ====== content from Google Sheet ====== */
+function parseCsv(text){
+  const rows=[]; let row=[], f='', q=false;
+  for(let i=0;i<text.length;i++){ const c=text[i];
+    if(q){ if(c==='"'){ if(text[i+1]==='"'){f+='"';i++;} else q=false; } else f+=c; }
+    else { if(c==='"') q=true; else if(c===','){row.push(f);f='';} else if(c==='\n'){row.push(f);rows.push(row);row=[];f='';} else if(c!=='\r') f+=c; }
+  }
+  if(f!==''||row.length){ row.push(f); rows.push(row); }
+  return rows;
+}
+function sheetCsvUrl(tab){ return 'https://docs.google.com/spreadsheets/d/'+CONTENT_SHEET_ID+'/gviz/tq?tqx=out:csv&sheet='+encodeURIComponent(tab); }
+function colIdx(h,name){ return h.findIndex(x=>String(x).trim()===name); }
+function splitList(v){ return String(v||'').split(',').map(s=>s.trim()).filter(Boolean); }
+
+async function loadContent(){
+  if(!CONTENT_SHEET_ID) return;
+  try{
+    const [menuTxt,setTxt]=await Promise.all([
+      fetch(sheetCsvUrl(MENU_TAB)).then(r=>{if(!r.ok)throw 0;return r.text();}),
+      fetch(sheetCsvUrl(SETTINGS_TAB)).then(r=>{if(!r.ok)throw 0;return r.text();})
+    ]);
+    const mr=parseCsv(menuTxt);
+    if(mr.length>1){
+      const h=mr[0].map(x=>String(x).trim());
+      const ci={id:colIdx(h,'מזהה'),name:colIdx(h,'שם'),desc:colIdx(h,'תיאור'),price:colIdx(h,'מחיר'),cat:colIdx(h,'קטגוריה'),icon:colIdx(h,'אייקון'),avail:colIdx(h,'זמין'),dod:colIdx(h,'מנת_היום')};
+      if(ci.name>=0){
+        const items=[];
+        for(let i=1;i<mr.length;i++){ const r=mr[i]; const nm=(r[ci.name]||'').trim(); if(!nm) continue;
+          const rawId=(r[ci.id]||'').trim();
+          items.push({
+            id: /^[0-9]+$/.test(rawId)?Number(rawId):rawId,
+            name:nm,
+            desc: ci.desc>=0?(r[ci.desc]||'').trim():'',
+            price: parseFloat(String(r[ci.price]||'0').replace(/[^0-9.]/g,''))||0,
+            cat: ci.cat>=0?((r[ci.cat]||'').trim()||'אחר'):'אחר',
+            icon: ci.icon>=0?((r[ci.icon]||'').trim()||'loaf'):'loaf',
+            available: ci.avail>=0?(String(r[ci.avail]||'').trim()!=='לא'):true,
+            dishOfDay: ci.dod>=0?(String(r[ci.dod]||'').trim()==='כן'):false
+          });
+        }
+        if(items.length) MENU=items;
+      }
+    }
+    const sr=parseCsv(setTxt); const map={};
+    sr.forEach(r=>{ if(r.length>=2 && String(r[0]||'').trim()) map[String(r[0]).trim()]=String(r[1]||'').trim(); });
+    if(map['שעות_איסוף']) pickupTimes=splitList(map['שעות_איסוף']);
+    if(map['שעות_משלוח']) deliveryTimes=splitList(map['שעות_משלוח']);
+    if(map['הודעה']){ const b=document.getElementById('announceBar'); if(b){ b.textContent=map['הודעה']; b.style.display='block'; } }
+    if(map['הערת_הזמנה']){ const n=document.getElementById('orderNote'); if(n){ n.textContent=map['הערת_הזמנה']; n.style.display='block'; } }
+  }catch(e){ /* leave built-in defaults */ }
+  renderCats(); renderMenu(); applyTimeOptions();
+}
+loadContent();
 </script>
 </body>
 </html>
