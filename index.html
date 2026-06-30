@@ -1303,7 +1303,8 @@ function parseCsv(text){
   return rows;
 }
 function sheetCsvUrl(tab){ return 'https://docs.google.com/spreadsheets/d/'+CONTENT_SHEET_ID+'/gviz/tq?tqx=out:csv&sheet='+encodeURIComponent(tab)+'&t='+Date.now(); }
-function colIdx(h,name){ return h.findIndex(x=>String(x).trim()===name); }
+function colClean(x){ return String(x).replace(/[\uFEFF\u200e\u200f\u202a-\u202e\u2066-\u2069]/g,'').trim(); }
+function colIdx(h,name){ var n=colClean(name); return h.findIndex(x=>colClean(x)===n); }
 function splitList(v){ return String(v||'').split(',').map(s=>s.trim()).filter(Boolean); }
 
 async function loadContent(){
