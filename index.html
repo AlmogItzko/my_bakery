@@ -775,6 +775,10 @@ const ORDER_FORM_URL    = "https://docs.google.com/forms/d/e/1FAIpQLSebtpNswjvFK
 const ORDER_FORM_FIELDS = {"1":"315626791","5":"1478208219","8":"1155599479","9":"1020251168","10":"779031964"};
 const ORDER_FORM_META   = {"method":"700980051","time":"288741732","settlement":"511016557","address":"1648124456","fee":"976950125","coupon":"373813301","discount":"1739514941","name":"1712288517","phone":"1181257805"};
 
+/* ====== שרת ההזמנות (Web App) ======
+   כתובת ה-/exec של ה-Web App. כשהיא מוגדרת, ההזמנות נשלחות לשרת ולא לטופס Google. */
+const ORDER_ENDPOINT = "https://script.google.com/macros/s/AKfycbyN5TVcRWK9y-pCD8TVu9IwlMK3BZYc3KeOVYknQBOtBzTpLVKnt8T-hb25AoIZd5Lh/exec";
+
 /* ====== דמי משלוח לפי יישוב ======
    חשוב: המרחקים הם הערכה בלבד! המחיר נקבע לפי מרחק נסיעה ממעוז חיים:
    עד 10 ק"מ = 10 ₪ · 10–20 ק"מ = 18 ₪ · 20–25 ק"מ = 25 ₪.
@@ -1170,24 +1174,41 @@ function placeOrder(){
 
   const summary=orderSummary();
   const d=deliveryInfo();
-  const p=new URLSearchParams();
-  Object.entries(cart).forEach(([id,q])=>{ const e=ORDER_FORM_FIELDS[id]; if(e) p.append('entry.'+e, q); });
-  const add=(entry,val)=>{ if(entry && val!=='' && val!=null) p.append('entry.'+entry, val); };
-  add(ORDER_FORM_META.name, name);
-  add(ORDER_FORM_META.phone, phoneRaw);
-  add(ORDER_FORM_META.method, method==='delivery' ? 'משלוח' : 'איסוף עצמי');
-  add(ORDER_FORM_META.time, time);
-  if(method==='delivery'){
-    add(ORDER_FORM_META.settlement, d.settlement);
-    add(ORDER_FORM_META.address, (document.getElementById('address').value||'').trim());
-    add(ORDER_FORM_META.fee, d.state==='ok' ? String(d.fee) : (d.state==='tbd' ? 'בתיאום' : ''));
+  const sub2=cartTotal(), disc2=couponDiscount(sub2), fee2=(method==='delivery'&&d.state==='ok')?d.fee:0, pay2=sub2-disc2+fee2;
+  if (ORDER_ENDPOINT) {
+    const orderObj={
+      name:name, phone:phoneRaw,
+      method:(method==='delivery'?'משלוח':'איסוף עצמי'),
+      time:time,
+      settlement:(method==='delivery'?(d.settlement||''):''),
+      address:(method==='delivery'?(document.getElementById('address').value||'').trim():''),
+      fee:(method==='delivery'?(d.state==='ok'?d.fee:(d.state==='tbd'?'בתיאום':'')):''),
+      coupon:appliedCoupon?appliedCoupon.code:'',
+      discount:appliedCoupon?Number(disc2.toFixed(2)):'',
+      total:Number(pay2.toFixed(2)),
+      items:Object.entries(cart).map(function(e){ var m=MENU.find(function(x){return x.id==e[0];}); return {name:m.name, qty:e[1], price:m.price}; })
+    };
+    try{ fetch(ORDER_ENDPOINT,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(orderObj)}); }catch(e){}
+  } else {
+    const p=new URLSearchParams();
+    Object.entries(cart).forEach(([id,q])=>{ const e=ORDER_FORM_FIELDS[id]; if(e) p.append('entry.'+e, q); });
+    const add=(entry,val)=>{ if(entry && val!=='' && val!=null) p.append('entry.'+entry, val); };
+    add(ORDER_FORM_META.name, name);
+    add(ORDER_FORM_META.phone, phoneRaw);
+    add(ORDER_FORM_META.method, method==='delivery' ? 'משלוח' : 'איסוף עצמי');
+    add(ORDER_FORM_META.time, time);
+    if(method==='delivery'){
+      add(ORDER_FORM_META.settlement, d.settlement);
+      add(ORDER_FORM_META.address, (document.getElementById('address').value||'').trim());
+      add(ORDER_FORM_META.fee, d.state==='ok' ? String(d.fee) : (d.state==='tbd' ? 'בתיאום' : ''));
+    }
+    if(appliedCoupon){
+      add(ORDER_FORM_META.coupon, appliedCoupon.code);
+      add(ORDER_FORM_META.discount, couponDiscount(cartTotal()).toFixed(2));
+    }
+    const respUrl=ORDER_FORM_URL.replace('/viewform','/formResponse');
+    try{ fetch(respUrl,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:p.toString()}); }catch(e){}
   }
-  if(appliedCoupon){
-    add(ORDER_FORM_META.coupon, appliedCoupon.code);
-    add(ORDER_FORM_META.discount, couponDiscount(cartTotal()).toFixed(2));
-  }
-  const respUrl=ORDER_FORM_URL.replace('/viewform','/formResponse');
-  try{ fetch(respUrl,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:p.toString()}); }catch(e){}
   try{ if(navigator.clipboard) navigator.clipboard.writeText(summary); }catch(e){}
 
   confirmed=true;
