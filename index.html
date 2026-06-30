@@ -1028,6 +1028,7 @@ function deliveryInfo(){
 let appliedCoupon = null;
 function couponDiscount(sub){
   if(!appliedCoupon) return 0;
+  if(appliedCoupon.expires && new Date() > appliedCoupon.expires) return 0;
   if(appliedCoupon.type === 'percent') return sub * appliedCoupon.value / 100;
   return Math.min(appliedCoupon.value, sub);
 }
@@ -1040,7 +1041,7 @@ function applyCoupon(){
   if(!c){ fail('קוד קופון לא תקין'); return; }
   if(c.enabled === false){ fail('הקופון אינו פעיל'); return; }
   if(c.expires && new Date() > c.expires){ fail('פג תוקף הקופון'); return; }
-  appliedCoupon = { code: code, type: c.type, value: c.value };
+  appliedCoupon = { code: code, type: c.type, value: c.value, expires: c.expires || null };
   var label = c.type === 'percent' ? c.value + '% הנחה' : c.value + ' ₪ הנחה';
   msg.textContent = 'הקופון הוחל: ' + label;
   msg.className = 'coupon-msg ok';
@@ -1271,8 +1272,25 @@ document.addEventListener('click', e=>{
 function parseExpiry(s){
   s=String(s||'').trim();
   if(!s) return null;
-  var m=s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})[ T](\d{1,2}):(\d{2})/);
+  var m;
+  // ISO: 2026-12-31 23:59[:ss]  or  2026-12-31T23:59
+  m=s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})[ T](\d{1,2}):(\d{2})/);
   if(m) return new Date(+m[1], +m[2]-1, +m[3], +m[4], +m[5]);
+  m=s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+  if(m) return new Date(+m[1], +m[2]-1, +m[3], 23, 59);
+  // gviz date object: Date(2026,11,31,23,59,0)
+  m=s.match(/^Date\((\d+),(\d+),(\d+)(?:,(\d+),(\d+)(?:,(\d+))?)?\)/);
+  if(m) return new Date(+m[1], +m[2], +m[3], +(m[4]||0), +(m[5]||0));
+  // DD/MM/YYYY or DD.MM.YYYY [HH:MM[:SS]]  (also handles US MM/DD via heuristic)
+  m=s.match(/^(\d{1,2})[\/.](\d{1,2})[\/.](\d{4})(?:[ T](\d{1,2}):(\d{2}))?/);
+  if(m){
+    var a=+m[1], b=+m[2], y=+m[3], hh=(m[4]!=null?+m[4]:23), mi=(m[5]!=null?+m[5]:59);
+    var day, mon;
+    if(a>12){ day=a; mon=b; }        // 31/12 → day first
+    else if(b>12){ day=b; mon=a; }   // 12/31 → month first
+    else { day=a; mon=b; }           // ambiguous → assume day-first
+    return new Date(y, mon-1, day, hh, mi);
+  }
   var d=new Date(s);
   return isNaN(d.getTime())?null:d;
 }
