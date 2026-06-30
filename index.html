@@ -1305,6 +1305,7 @@ function parseCsv(text){
 function sheetCsvUrl(tab){ return 'https://docs.google.com/spreadsheets/d/'+CONTENT_SHEET_ID+'/gviz/tq?tqx=out:csv&sheet='+encodeURIComponent(tab)+'&t='+Date.now(); }
 function colClean(x){ return String(x).replace(/[\uFEFF\u200e\u200f\u202a-\u202e\u2066-\u2069]/g,'').trim(); }
 function colIdx(h,name){ var n=colClean(name); return h.findIndex(x=>colClean(x)===n); }
+function colIdxAny(h,names){ for(var i=0;i<names.length;i++){ var k=colIdx(h,names[i]); if(k>=0) return k; } return -1; }
 function splitList(v){ return String(v||'').split(',').map(s=>s.trim()).filter(Boolean); }
 
 async function loadContent(){
@@ -1348,7 +1349,13 @@ async function loadContent(){
     const cr=parseCsv(cTxt);
     if(cr.length>1){
       const h=cr[0].map(x=>String(x).trim());
-      const ci={code:colIdx(h,'קוד'),type:colIdx(h,'סוג'),value:colIdx(h,'ערך'),enabled:colIdx(h,'פעיל'),expires:colIdx(h,'תפוגה')};
+      const ci={
+        code:    colIdxAny(h,['קוד','code']),
+        type:    colIdxAny(h,['סוג','type']),
+        value:   colIdxAny(h,['ערך','value','שווי']),
+        enabled: colIdxAny(h,['פעיל','פעילה','enabled']),
+        expires: colIdxAny(h,['תפוגה','פג תוקף הקופון','פג תוקף','תוקף','expiry','expires'])
+      };
       if(ci.code>=0){
         const map={};
         for(let i=1;i<cr.length;i++){ const r=cr[i]; const code=(r[ci.code]||'').trim().toUpperCase(); if(!code) continue;
