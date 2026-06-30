@@ -788,9 +788,9 @@ const BIT_LINK  = "";
 /* ====== קודי קופון ======
    הוסיפו/שנו קופונים כאן. type: "percent" (אחוז) או "fixed" (סכום בשקלים).
    הקוד שמזין הלקוח אינו תלוי באותיות גדולות/קטנות. */
-const COUPONS = {
-  "WELCOME10": { type: "percent", value: 10 },  // 10% הנחה
-  "PIROR20":   { type: "fixed",   value: 20 }   // 20 ₪ הנחה
+let COUPONS = {
+  "WELCOME10": { type: "percent", value: 10, enabled: true, expires: null },  // 10% הנחה
+  "PIROR20":   { type: "fixed",   value: 20, enabled: true, expires: null }   // 20 ₪ הנחה
 };
 
 /* ====== תוכן מגוגל שיטס ======
@@ -799,6 +799,7 @@ const COUPONS = {
 const CONTENT_SHEET_ID = "12kdcvXqnZSrIrL4oXe0BTZNxkGXWQpGBFRY0klbXC4s";
 const MENU_TAB     = "תפריט";
 const SETTINGS_TAB = "הגדרות";
+const COUPONS_TAB  = "קופונים";
 
 const DELIVERY_FEES = [
   { name: 'מעוז חיים', fee: 0 },
@@ -1033,17 +1034,16 @@ function couponDiscount(sub){
 function applyCoupon(){
   var code = (document.getElementById('couponCode').value || '').trim().toUpperCase();
   var msg = document.getElementById('couponMsg');
+  function fail(t){ appliedCoupon=null; msg.textContent=t; msg.className='coupon-msg err'; renderTotals(); }
   if(!code){ appliedCoupon = null; msg.className = 'coupon-msg'; renderTotals(); return; }
-  if(COUPONS[code]){
-    appliedCoupon = { code: code, type: COUPONS[code].type, value: COUPONS[code].value };
-    var label = appliedCoupon.type === 'percent' ? appliedCoupon.value + '% הנחה' : appliedCoupon.value + ' ₪ הנחה';
-    msg.textContent = 'הקופון הוחל: ' + label;
-    msg.className = 'coupon-msg ok';
-  } else {
-    appliedCoupon = null;
-    msg.textContent = 'קוד קופון לא תקין';
-    msg.className = 'coupon-msg err';
-  }
+  var c = COUPONS[code];
+  if(!c){ fail('קוד קופון לא תקין'); return; }
+  if(c.enabled === false){ fail('הקופון אינו פעיל'); return; }
+  if(c.expires && new Date() > c.expires){ fail('פג תוקף הקופון'); return; }
+  appliedCoupon = { code: code, type: c.type, value: c.value };
+  var label = c.type === 'percent' ? c.value + '% הנחה' : c.value + ' ₪ הנחה';
+  msg.textContent = 'הקופון הוחל: ' + label;
+  msg.className = 'coupon-msg ok';
   renderTotals();
 }
 
@@ -1268,6 +1268,14 @@ document.addEventListener('click', e=>{
   if(p && p.classList.contains('open') && !p.contains(e.target) && !t.contains(e.target)) a11yTogglePanel(false);
 });
 /* ====== content from Google Sheet ====== */
+function parseExpiry(s){
+  s=String(s||'').trim();
+  if(!s) return null;
+  var m=s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})[ T](\d{1,2}):(\d{2})/);
+  if(m) return new Date(+m[1], +m[2]-1, +m[3], +m[4], +m[5]);
+  var d=new Date(s);
+  return isNaN(d.getTime())?null:d;
+}
 function parseCsv(text){
   const rows=[]; let row=[], f='', q=false;
   for(let i=0;i<text.length;i++){ const c=text[i];
@@ -1317,6 +1325,28 @@ async function loadContent(){
     if(map['הודעה']){ const b=document.getElementById('announceBar'); if(b){ b.textContent=map['הודעה']; b.style.display='block'; } }
     if(map['הערת_הזמנה']){ const n=document.getElementById('orderNote'); if(n){ n.textContent=map['הערת_הזמנה']; n.style.display='block'; } }
   }catch(e){ /* leave built-in defaults */ }
+  try{
+    const cTxt=await fetch(sheetCsvUrl(COUPONS_TAB)).then(r=>{if(!r.ok)throw 0;return r.text();});
+    const cr=parseCsv(cTxt);
+    if(cr.length>1){
+      const h=cr[0].map(x=>String(x).trim());
+      const ci={code:colIdx(h,'קוד'),type:colIdx(h,'סוג'),value:colIdx(h,'ערך'),enabled:colIdx(h,'פעיל'),expires:colIdx(h,'תפוגה')};
+      if(ci.code>=0){
+        const map={};
+        for(let i=1;i<cr.length;i++){ const r=cr[i]; const code=(r[ci.code]||'').trim().toUpperCase(); if(!code) continue;
+          const tRaw=ci.type>=0?(r[ci.type]||'').trim():'';
+          const type=(tRaw.indexOf('אחוז')>=0||tRaw.toLowerCase()==='percent')?'percent':'fixed';
+          map[code]={
+            type:type,
+            value: parseFloat(String(r[ci.value]||'0').replace(/[^0-9.]/g,''))||0,
+            enabled: ci.enabled>=0?(String(r[ci.enabled]||'').trim()!=='לא'):true,
+            expires: ci.expires>=0?parseExpiry(r[ci.expires]):null
+          };
+        }
+        if(Object.keys(map).length) COUPONS=map;
+      }
+    }
+  }catch(e){ /* keep built-in coupons */ }
   renderCats(); renderMenu(); applyTimeOptions();
 }
 loadContent();
