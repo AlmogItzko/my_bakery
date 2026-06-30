@@ -247,12 +247,19 @@
   .bit-open:hover{background:#7a2424}
 
   .method{margin-bottom:14px}
-  .method label,.delivery label{font-size:.86rem;font-weight:700;letter-spacing:.04em;color:var(--crust-soft);display:block;margin-bottom:7px}
+  .method label,.delivery label,.cust label{font-size:.86rem;font-weight:700;letter-spacing:.04em;color:var(--crust-soft);display:block;margin-bottom:7px}
   .method-opts{display:flex;gap:8px}
   .method-btn{flex:1;padding:11px;border:1.5px solid var(--kraft);background:var(--cream);color:var(--crust);border-radius:10px;font-family:var(--body);font-weight:700;font-size:.95rem;cursor:pointer;transition:all .18s ease}
   .method-btn.active{background:var(--crust);color:var(--cream);border-color:var(--crust)}
   .delivery{margin-bottom:14px}
-  .delivery select,.delivery input{width:100%;padding:11px 14px;border-radius:10px;border:1.5px solid var(--kraft);background:var(--cream);font-family:var(--body);font-size:1rem;color:var(--crust)}
+  .delivery select,.delivery input,.cust input{width:100%;padding:11px 14px;border-radius:10px;border:1.5px solid var(--kraft);background:var(--cream);font-family:var(--body);font-size:1rem;color:var(--crust);box-sizing:border-box}
+  .cust input.bad{border-color:var(--jam)}
+  .order-err{color:var(--jam);font-size:.85rem;margin-top:8px;font-weight:700}
+  .confirm-summary{text-align:right;background:var(--cream);border:1px solid var(--kraft);border-radius:12px;padding:14px 16px;margin:14px 0;font-size:.92rem;line-height:1.7}
+  .confirm-summary .ln{display:flex;justify-content:space-between;gap:12px}
+  .confirm-summary .sep{border-top:1px dashed var(--kraft);margin:9px 0}
+  .confirm-summary .tot{font-weight:800;font-size:1.05rem;color:var(--crust)}
+  .confirm-summary .muted{color:var(--crust-soft);font-size:.86rem}
   .coupon{margin-bottom:14px}
   .coupon label{font-size:.86rem;font-weight:700;letter-spacing:.04em;color:var(--crust-soft);display:block;margin-bottom:7px}
   .coupon-row{display:flex;gap:8px}
@@ -600,6 +607,14 @@
   </div>
   <div class="drawer-body" id="drawerBody"></div>
   <div class="drawer-foot" id="drawerFoot" style="display:none">
+    <div class="cust">
+      <label for="custName">שם מלא</label>
+      <input type="text" id="custName" placeholder="השם שלכם" autocomplete="name" oninput="clearOrderErr()">
+      <label for="custPhone" style="margin-top:10px">טלפון</label>
+      <input type="tel" id="custPhone" inputmode="numeric" placeholder="050-0000000" autocomplete="tel" oninput="clearOrderErr()">
+      <div class="order-err" id="orderErr" style="display:none"></div>
+    </div>
+
     <div class="method">
       <label>אופן קבלת ההזמנה</label>
       <div class="method-opts">
@@ -758,7 +773,7 @@ const STORY_VIDEO_ID = "PASTE_YOUTUBE_ID";
    את שלושת הערכים מקבלים אוטומטית מהרצת הסקריפט bakery-form.gs (מודפסים ב-Logs). */
 const ORDER_FORM_URL    = "https://docs.google.com/forms/d/e/1FAIpQLSe4JmNAjOu7aVmWZqr1CwuXfyfab4Gvx8rsrpPG386WClxzvA/viewform";
 const ORDER_FORM_FIELDS = {"1":"35748290","2":"348453155","3":"1308666033","5":"58148281","8":"796427405","9":"1360968687"};
-const ORDER_FORM_META   = {"method":"702315586","time":"1179275455","settlement":"1400931355","address":"1687940500","fee":"490504100","coupon":"570592141","discount":"33032037"};
+const ORDER_FORM_META   = {"method":"702315586","time":"1179275455","settlement":"1400931355","address":"1687940500","fee":"490504100","coupon":"570592141","discount":"33032037","name":"1160638803","phone":"1262713596"};
 
 /* ====== דמי משלוח לפי יישוב ======
    חשוב: המרחקים הם הערכה בלבד! המחיר נקבע לפי מרחק נסיעה ממעוז חיים:
@@ -1112,6 +1127,23 @@ function orderSummary(){
   return s;
 }
 
+function showOrderErr(msg){ var e=document.getElementById('orderErr'); if(e){ e.textContent=msg; e.style.display='block'; } }
+function clearOrderErr(){ var e=document.getElementById('orderErr'); if(e) e.style.display='none'; var n=document.getElementById('custName'), p=document.getElementById('custPhone'); if(n)n.classList.remove('bad'); if(p)p.classList.remove('bad'); }
+function escapeHtml(s){ return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+function buildSummaryHtml(time){
+  var sub=cartTotal(), disc=couponDiscount(sub), d=deliveryInfo();
+  var feeNum=(method==='delivery'&&d.state==='ok')?d.fee:0;
+  var lines=Object.entries(cart).map(function(e){ var m=MENU.find(function(x){return x.id==e[0];}); return '<div class="ln"><span>'+m.name+' × '+e[1]+'</span><span>'+(m.price*e[1]).toFixed(2)+' ₪</span></div>'; }).join('');
+  var html=lines+'<div class="sep"></div><div class="ln"><span>פריטים</span><span>'+sub.toFixed(2)+' ₪</span></div>';
+  if(disc>0) html+='<div class="ln"><span>קופון '+appliedCoupon.code+'</span><span>−'+disc.toFixed(2)+' ₪</span></div>';
+  if(method==='delivery') html+='<div class="ln"><span>משלוח</span><span>'+(d.state==='ok'?(d.fee===0?'חינם':d.fee+' ₪'):'בתיאום')+'</span></div>';
+  var pay=sub-disc+feeNum;
+  var tot=(method==='delivery'&&d.state==='tbd')?(pay.toFixed(2)+' ₪ + משלוח'):(pay.toFixed(2)+' ₪');
+  html+='<div class="sep"></div><div class="ln tot"><span>סה"כ</span><span>'+tot+'</span></div>';
+  var ml=method==='delivery'?('משלוח ל'+(d.settlement||'יישוב שנבחר')+' · שעה: '+time):('איסוף עצמי · שעה: '+time);
+  html+='<div class="sep"></div><div class="muted">'+ml+'</div>';
+  return html;
+}
 function placeOrder(){
   if(itemCount()===0) return;
   const time=document.getElementById('pickupTime').value;
@@ -1127,29 +1159,36 @@ function placeOrder(){
     return;
   }
 
+  // פרטי לקוח — חובה
+  const name=(document.getElementById('custName').value||'').trim();
+  const phoneRaw=(document.getElementById('custPhone').value||'').replace(/\D/g,'');
+  const nEl=document.getElementById('custName'), pEl=document.getElementById('custPhone');
+  nEl.classList.remove('bad'); pEl.classList.remove('bad');
+  if(!name){ nEl.classList.add('bad'); showOrderErr('נא למלא שם מלא'); nEl.focus(); return; }
+  if(!/^\d{10}$/.test(phoneRaw)){ pEl.classList.add('bad'); showOrderErr('נא למלא מספר טלפון תקין (10 ספרות)'); pEl.focus(); return; }
+  if(method==='delivery' && !(document.getElementById('settlement').value||'')){ showOrderErr('בחרו יישוב למשלוח'); return; }
+
   const summary=orderSummary();
   const d=deliveryInfo();
-  let url=ORDER_FORM_URL;
-  const params=[];
-  Object.entries(cart).forEach(([id,q])=>{
-    const e=ORDER_FORM_FIELDS[id];
-    if(e) params.push('entry.'+e+'='+encodeURIComponent(q));
-  });
-  const addField=(entry,val)=>{ if(entry && val!=='' && val!=null) params.push('entry.'+entry+'='+encodeURIComponent(val)); };
-  addField(ORDER_FORM_META.method, method==='delivery' ? 'משלוח' : 'איסוף עצמי');
-  addField(ORDER_FORM_META.time, time);
+  const p=new URLSearchParams();
+  Object.entries(cart).forEach(([id,q])=>{ const e=ORDER_FORM_FIELDS[id]; if(e) p.append('entry.'+e, q); });
+  const add=(entry,val)=>{ if(entry && val!=='' && val!=null) p.append('entry.'+entry, val); };
+  add(ORDER_FORM_META.name, name);
+  add(ORDER_FORM_META.phone, phoneRaw);
+  add(ORDER_FORM_META.method, method==='delivery' ? 'משלוח' : 'איסוף עצמי');
+  add(ORDER_FORM_META.time, time);
   if(method==='delivery'){
-    addField(ORDER_FORM_META.settlement, d.settlement);
-    addField(ORDER_FORM_META.address, (document.getElementById('address').value||'').trim());
-    addField(ORDER_FORM_META.fee, d.state==='ok' ? String(d.fee) : (d.state==='tbd' ? 'בתיאום' : ''));
+    add(ORDER_FORM_META.settlement, d.settlement);
+    add(ORDER_FORM_META.address, (document.getElementById('address').value||'').trim());
+    add(ORDER_FORM_META.fee, d.state==='ok' ? String(d.fee) : (d.state==='tbd' ? 'בתיאום' : ''));
   }
   if(appliedCoupon){
-    addField(ORDER_FORM_META.coupon, appliedCoupon.code);
-    addField(ORDER_FORM_META.discount, couponDiscount(cartTotal()).toFixed(2));
+    add(ORDER_FORM_META.coupon, appliedCoupon.code);
+    add(ORDER_FORM_META.discount, couponDiscount(cartTotal()).toFixed(2));
   }
-  if(params.length) url += (url.includes('?')?'&':'?') + 'usp=pp_url&' + params.join('&');
+  const respUrl=ORDER_FORM_URL.replace('/viewform','/formResponse');
+  try{ fetch(respUrl,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:p.toString()}); }catch(e){}
   try{ if(navigator.clipboard) navigator.clipboard.writeText(summary); }catch(e){}
-  window.open(url,'_blank','noopener');
 
   confirmed=true;
   document.getElementById('drawerFoot').style.display='none';
@@ -1170,7 +1209,8 @@ function placeOrder(){
   body.innerHTML=`<div class="confirm">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
     <h3>ההזמנה התקבלה</h3>
-    <p>הטופס נפתח בלשונית חדשה — מלאו ושלחו אותו כדי להשלים את ההזמנה.<br>${methodLine}<br>(העתקנו את פרטי ההזמנה, כולל המשלוח, גם ללוח — אפשר פשוט להדביק.)</p>
+    <p>תודה, ${escapeHtml(name)}! קלטנו את ההזמנה ונחזור אליכם לאישור.</p>
+    <div class="confirm-summary">${buildSummaryHtml(time)}</div>
     ${bitBlock}
   </div>`;
   for(const k in cart) delete cart[k];
