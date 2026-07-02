@@ -128,7 +128,7 @@
   .order-note{background:var(--cream);border:1px solid var(--kraft);border-radius:10px;padding:10px 12px;font-size:.85rem;color:var(--crust-soft);margin-bottom:12px;line-height:1.5}
   .cat{background:transparent;border:1.5px solid var(--kraft);color:var(--crust-soft);
     padding:9px 20px;border-radius:30px;font-family:var(--body);font-weight:700;font-size:.95rem;cursor:pointer;transition:all .2s ease;display:inline-flex;align-items:center;gap:7px}
-  .cat svg{width:16px;height:16px;flex:none}
+  .cat svg{width:24px;height:24px;flex:none}
   .cat:hover{border-color:var(--crust)}
   .cat.active{background:var(--crust);color:var(--cream);border-color:var(--crust)}
 
@@ -187,7 +187,7 @@
   .foot-brand{font-family:var(--display);font-weight:900;font-size:1.6rem;margin-bottom:10px;display:flex;align-items:center;gap:10px}
   .foot-brand .mark{width:30px;height:30px;color:var(--jam)}
   .foot-social{display:flex;gap:10px;margin-top:14px}
-  .soc-btn{display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:50%;border:1.5px solid var(--kraft);background:var(--cream);color:var(--crust);cursor:pointer;transition:all .18s ease}
+  .soc-btn{display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;padding:0;margin:0;box-sizing:border-box;line-height:0;-webkit-appearance:none;appearance:none;border-radius:50%;border:1.5px solid var(--kraft);background:var(--cream);color:var(--crust);cursor:pointer;transition:all .18s ease}
   .soc-btn:hover{border-color:currentColor;transform:translateY(-2px)}
   .soc-btn svg{width:20px;height:20px;display:block}
   #igLink{color:#E1306C}
@@ -420,9 +420,10 @@
   .art-hint{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);background:rgba(43,27,16,.72);color:#fff;font-size:.72rem;font-weight:700;padding:3px 12px;border-radius:20px;opacity:0;transition:opacity .18s ease;pointer-events:none}
   .card .art:hover .art-hint,.card .art:focus-visible .art-hint{opacity:1}
   /* fly to cart */
-  .fly-dot{position:fixed;z-index:200;width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:50%;background:var(--honey);box-shadow:0 2px 8px rgba(43,27,16,.3);pointer-events:none;transition:transform .68s cubic-bezier(.5,-0.15,.4,1),opacity .68s ease;will-change:transform,opacity}
-  @keyframes cartBump{0%{transform:scale(1)}30%{transform:scale(1.18)}60%{transform:scale(.95)}100%{transform:scale(1)}}
-  .cart-bump{animation:cartBump .4s ease}
+  .fly-dot{position:fixed;z-index:200;width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:50%;background:var(--honey);border:3px solid #fff;box-shadow:0 8px 22px rgba(43,27,16,.5);display:flex;align-items:center;justify-content:center;pointer-events:none;transition:transform .8s cubic-bezier(.5,-0.25,.35,1),opacity .8s ease;will-change:transform,opacity}
+  .fly-dot svg{width:18px;height:18px;display:block}
+  @keyframes cartBump{0%{transform:translateY(0) scale(1)}28%{transform:translateY(-8px) scale(1.07)}60%{transform:translateY(0) scale(.98)}100%{transform:translateY(0) scale(1)}}
+  .cart-bump{animation:cartBump .5s cubic-bezier(.3,1.4,.5,1)}
   /* product info modal */
   .pmodal-overlay{position:fixed;inset:0;background:rgba(43,27,16,.55);z-index:120;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;visibility:hidden;transition:opacity .25s ease}
   .pmodal-overlay.open{opacity:1;visibility:visible}
@@ -945,16 +946,17 @@ let confirmed = false;
 let activeCat = 'הכול';
 const catWrap = document.getElementById('cats');
 function catIcon(c){
-  var s='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">';
-  var ic={
-    'הכול':s+'<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>',
-    'לחמים':s+'<path d="M4 13c0-5 4-8 8-8s8 3 8 8c0 2-4 3-8 3s-8-1-8-3Z"/><path d="M9 8c1 4 1 6 1 8M14 8c-1 4-1 6-1 8"/></svg>',
-    'עוגות':s+'<path d="M4 20h16v-7H4z"/><path d="M4 13c2 0 2 1.6 4 1.6S10 13 12 13s2 1.6 4 1.6S18 13 20 13"/><path d="M12 5v3"/><circle cx="12" cy="4.3" r="1"/></svg>',
-    'עוגיות':s+'<circle cx="12" cy="12" r="8"/><circle cx="9.5" cy="10" r="1" fill="currentColor" stroke="none"/><circle cx="14.5" cy="9.5" r="1" fill="currentColor" stroke="none"/><circle cx="13.5" cy="14" r="1" fill="currentColor" stroke="none"/><circle cx="9" cy="14.5" r="1" fill="currentColor" stroke="none"/></svg>',
-    'מאפים':s+'<path d="M5 15c0-5 3-8 7-8s7 3 7 8c0 2-3 2-4 1-1-3-3-4-3-4s-2 1-3 4c-1 1-4 1-4-1Z"/></svg>',
-    'לחמניות':s+'<ellipse cx="12" cy="13" rx="8" ry="5"/><path d="M8 11c1 1 1 2 1 3M12 10v4M16 11c-1 1-1 2-1 3"/></svg>'
+  var basket='<svg viewBox="0 0 80 80"><path d="M20 36h40l-4 26a4 4 0 0 1-4 4H28a4 4 0 0 1-4-4z" fill="#C57E1E"/><path d="M20 36h40l-1.2 8H21.2z" fill="#A8651A"/><path d="M31 36l6-15M49 36l-6-15" stroke="#5A3410" stroke-width="3.5" stroke-linecap="round" fill="none" opacity=".7"/><circle cx="35" cy="51" r="4.2" fill="#8E2A2A"/><circle cx="47" cy="53" r="4.2" fill="#5E6B43"/><circle cx="41" cy="47" r="4.2" fill="#F8F0DE"/></svg>';
+  var map={
+    'הכול':basket,
+    'לחמים':ICONS.loaf,
+    'עוגות':ICONS.cake,
+    'עוגיות':ICONS.cookie,
+    'מאפים':ICONS.croissant,
+    'לחמניות':ICONS.bun,
+    'באגטים':ICONS.baguette
   };
-  return ic[c]||(s+'<circle cx="12" cy="12" r="8"/></svg>');
+  return map[c]||basket;
 }
 function renderCats(){
   const cats = ['הכול', ...new Set(MENU.map(m=>m.cat))];
@@ -1032,17 +1034,19 @@ function flyToCart(fromEl){
     var sx=a.left+a.width/2, sy=a.top+a.height/2;
     var dot=document.createElement('div');
     dot.className='fly-dot';
+    dot.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>';
     dot.style.left=sx+'px'; dot.style.top=sy+'px';
     document.body.appendChild(dot);
     var dx=(b.left+b.width/2)-sx, dy=(b.top+b.height/2)-sy;
+    void dot.offsetWidth;
     requestAnimationFrame(function(){
-      dot.style.transform='translate('+dx+'px,'+dy+'px) scale(.3)';
-      dot.style.opacity='0.2';
+      dot.style.transform='translate('+dx+'px,'+dy+'px) scale(.45)';
+      dot.style.opacity='0.25';
     });
     var finished=false;
-    var done=function(){ if(finished)return; finished=true; if(dot.parentNode)dot.remove(); target.classList.add('cart-bump'); setTimeout(function(){target.classList.remove('cart-bump');},400); };
+    var done=function(){ if(finished)return; finished=true; if(dot.parentNode)dot.remove(); target.classList.add('cart-bump'); setTimeout(function(){target.classList.remove('cart-bump');},520); };
     dot.addEventListener('transitionend',done,{once:true});
-    setTimeout(done,720);
+    setTimeout(done,850);
   }catch(e){}
 }
 function openProductModal(id){
@@ -1327,7 +1331,7 @@ function placeOrder(){
   body.innerHTML=`<div class="confirm">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
     <h3>ההזמנה התקבלה</h3>
-    <p>תודה מכל הלב, ${escapeHtml(name)}. קיבלנו את ההזמנה ונכין אותה באהבה — נהיה בקשר איתך בקרוב.</p>
+    <p>תודה מכל הלב, ${escapeHtml(name)}. קיבלנו את ההזמנה ונכין אותה באהבה.</p>
     <div class="confirm-summary">${buildSummaryHtml(time)}</div>
     ${bitBlock}
   </div>`;
