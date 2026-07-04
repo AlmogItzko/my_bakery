@@ -111,6 +111,8 @@
   .section-head{text-align:center;max-width:640px;margin:0 auto 44px}
   .section-head h2{font-size:clamp(2.1rem,4vw,3.1rem);margin:10px 0}
   .section-head p{color:var(--crust-soft);font-size:1.1rem}
+  .orders-closed{max-width:640px;margin:0 auto 30px;background:var(--cream);border:1.5px solid var(--jam);border-radius:14px;padding:16px 20px;text-align:center;color:var(--crust);font-weight:700;font-size:1.05rem;display:flex;align-items:center;justify-content:center;gap:10px}
+  .orders-closed svg{width:22px;height:22px;flex:none;color:var(--jam)}
 
   .cats{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:40px}
   .menu-search{max-width:420px;margin:0 auto 22px;position:relative}
@@ -519,6 +521,8 @@
         <h2>מה יש על המדף</h2>
         <p>הכול נאפה בבוקר האיסוף. הזמינו עד 9:00 ונשמור לכם מנה, עדיין חמה.</p>
       </div>
+
+      <div id="ordersClosedNotice" class="orders-closed" style="display:none"></div>
 
       <div class="menu-search reveal">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
@@ -944,6 +948,8 @@ let confirmed = false;
 
 /* ---- render menu ---- */
 let activeCat = 'הכול';
+let ordersOpen = true;   /* מתג ראשי — נקרא מהגיליון, מפתח "הזמנות_פעילות" (כן/לא) */
+let closedMsg = '';
 const catWrap = document.getElementById('cats');
 function catIcon(c){
   var basket='<svg viewBox="0 0 80 80"><path d="M20 36h40l-4 26a4 4 0 0 1-4 4H28a4 4 0 0 1-4-4z" fill="#C57E1E"/><path d="M20 36h40l-1.2 8H21.2z" fill="#A8651A"/><path d="M31 36l6-15M49 36l-6-15" stroke="#5A3410" stroke-width="3.5" stroke-linecap="round" fill="none" opacity=".7"/><circle cx="35" cy="51" r="4.2" fill="#8E2A2A"/><circle cx="47" cy="53" r="4.2" fill="#5E6B43"/><circle cx="41" cy="47" r="4.2" fill="#F8F0DE"/></svg>';
@@ -984,9 +990,11 @@ function renderMenu(){
   grid.innerHTML=items.map(m=>{
     const sold = m.available===false;
     const badge = m.dishOfDay ? '<span class="dod-badge">מנת היום</span>' : '';
-    const btn = sold
+    const btn = !ordersOpen
+      ? '<button class="add" disabled>ההזמנות סגורות</button>'
+      : (sold
       ? '<button class="add" disabled>אזל להיום</button>'
-      : `<button class="add" data-id="${m.id}" onclick="addItem(${m.id},this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>הוספה להזמנה</button>`;
+      : `<button class="add" data-id="${m.id}" onclick="addItem(${m.id},this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>הוספה להזמנה</button>`);
     return `<article class="card${sold?' sold':''}${m.dishOfDay?' dod':''}">
       ${badge}
       <div class="art" role="button" tabindex="0" aria-label="מידע על ${m.name}" onclick="openProductModal('${m.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openProductModal('${m.id}');}">${ICONS[m.icon]||ICONS.loaf}<span class="art-hint" aria-hidden="true">מידע</span></div>
@@ -1250,6 +1258,7 @@ function buildSummaryHtml(time){
   return html;
 }
 function placeOrder(){
+  if(!ordersOpen){ alert('ההזמנות סגורות כרגע. נסו שוב מאוחר יותר.'); return; }
   if(itemCount()===0) return;
   const time=document.getElementById('pickupTime').value;
   const body=document.getElementById('drawerBody');
@@ -1356,13 +1365,28 @@ document.querySelectorAll('.navlinks a').forEach(a=>a.addEventListener('click',c
 function updateCartBar(){
   const bar=document.getElementById('cartBar');
   const n=itemCount();
-  if(n>0 && !confirmed){
+  if(n>0 && !confirmed && ordersOpen){
     bar.classList.add('show');
     document.getElementById('cartBarCount').textContent=n;
     document.getElementById('cartBarTotal').textContent=grandTotal().toFixed(2)+' ₪';
   } else {
     bar.classList.remove('show');
   }
+}
+function applyOrdersState(){
+  var notice=document.getElementById('ordersClosedNotice');
+  if(notice){
+    if(!ordersOpen){
+      var msg=closedMsg || 'ההזמנות סגורות כרגע. מוזמנים לעיין בתפריט — נשמח לראותכם שוב בקרוב.';
+      notice.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5M12 16h.01"/></svg><span></span>';
+      notice.querySelector('span').textContent=msg;
+      notice.style.display='flex';
+    } else {
+      notice.style.display='none';
+    }
+  }
+  renderMenu();
+  updateCartBar();
 }
 
 /* ---- scroll reveal ---- */
@@ -1508,6 +1532,9 @@ async function loadContent(){
     if(map['שעות_משלוח']) deliveryTimes=splitList(map['שעות_משלוח']);
     if(map['הודעה']){ const b=document.getElementById('announceBar'); if(b){ b.textContent=map['הודעה']; b.style.display='block'; } }
     if(map['הערת_הזמנה']){ const n=document.getElementById('orderNote'); if(n){ n.textContent=map['הערת_הזמנה']; n.style.display='block'; } }
+    ordersOpen = !(map['הזמנות_פעילות'] && String(map['הזמנות_פעילות']).trim()==='לא');
+    closedMsg = map['הודעת_סגירה'] ? String(map['הודעת_סגירה']).trim() : '';
+    applyOrdersState();
   }catch(e){ /* leave built-in defaults */ }
   try{
     const cTxt=await fetch(sheetCsvUrl(COUPONS_TAB),{cache:'no-store'}).then(r=>{if(!r.ok)throw 0;return r.text();});
