@@ -237,6 +237,11 @@
   .checkout:disabled{opacity:.5;cursor:not-allowed}
   .checkout-hint{text-align:center;font-size:.82rem;color:var(--jam);margin-top:8px;display:none}
   .checkout-hint.show{display:block}
+  .agree{display:flex;align-items:flex-start;gap:9px;font-size:.92rem;color:var(--crust-soft);line-height:1.5;margin:2px 0 12px;cursor:pointer}
+  .agree input{width:20px;height:20px;flex:none;margin-top:1px;accent-color:var(--jam);cursor:pointer}
+  .agree a{color:var(--jam);text-decoration:underline}
+  .foot-legal{display:inline-block;color:var(--crust-soft);text-decoration:underline;font-size:.9rem;margin-top:6px}
+  .foot-legal:hover{color:var(--crust)}
   .confirm{text-align:center;padding:50px 20px}
   .confirm svg{width:84px;height:84px;color:var(--herb);margin-bottom:18px}
   .confirm h3{font-size:1.9rem;margin-bottom:10px}
@@ -310,7 +315,7 @@
   .cart-bar-total{margin-inline-start:auto}
 
   /* keep anchored sections clear of the sticky header */
-  section[id],footer[id]{scroll-margin-top:86px}
+  section[id],footer[id]{scroll-margin-top:96px}
 
   /* WhatsApp floating button */
   .wa-btn{position:fixed;left:18px;bottom:48px;z-index:85;width:52px;height:52px;border-radius:50%;background:#25D366;color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(0,0,0,.3);transition:transform .15s ease,background .2s ease}
@@ -415,6 +420,12 @@
     .cat{flex:none}
     .drawer{width:100%;max-width:100%}
     .qty button{width:32px;height:32px;font-size:1.1rem}
+    .pickup select,.delivery select,.delivery input,.cust input,#couponCode,#address{min-height:48px}
+    .method-btn{min-height:46px}
+    .coupon-row button{min-height:46px}
+    .checkout{padding:18px}
+    .drawer-head .x{padding:8px}
+    .agree{font-size:1rem}
   }
   /* clickable product art */
   .card .art{cursor:pointer;position:relative}
@@ -469,7 +480,7 @@
     <a href="#top" class="brand"><svg class="mark"><use href="#wheat-mark"/></svg>תנור ופירור</a>
     <nav class="navlinks">
       <a href="#menu">התפריט</a>
-      <a href="#story" onclick="openStory(event)">הסיפור שלנו</a>
+      <a href="#story">הסיפור שלנו</a>
       <a href="#gallery">גלריה</a>
       <a href="#visit">בקרו אותנו</a>
     </nav>
@@ -494,7 +505,7 @@
         <p class="lede">מאפייה שכונתית קטנה שמוציאה מדי בוקר כיכרות בתסיסה ארוכה ומאפים עשירים בחמאה.</p>
         <div class="hero-cta">
           <button class="btn-primary" onclick="document.getElementById('menu').scrollIntoView()">הזמנה</button>
-          <a href="#story" class="btn-ghost" onclick="openStory(event)">הסיפור שלנו</a>
+          <a href="#story" class="btn-ghost">הסיפור שלנו</a>
         </div>
       </div>
       <div class="loaf-card reveal">
@@ -601,14 +612,11 @@
         </button>
       </div>
     </div>
-    <div>
-      <h4>בקרו אותנו</h4>
-      <p>רחוב הריחיים 114<br>תל אביב-יפו</p>
-      <a href="tel:+97235550148">03-555-0148</a>
-      <a href="mailto:hello@tanurupeyrur.co.il">hello@tanurupeyrur.co.il</a>
-    </div>
+    <div></div>
   </div>
-  <div class="wrap foot-bottom">© 2026 מאפיית תנור ופירור · הזמנות מראש נסגרות ב-9:00 לאיסוף באותו היום</div>
+  <div class="wrap foot-bottom">© 2026 מאפיית תנור ופירור · הזמנות מראש נסגרות ב-9:00 לאיסוף באותו היום<br>
+    <a href="#" class="foot-legal" onclick="openLegal('privacy');return false;">מדיניות פרטיות</a> · <a href="#" class="foot-legal" onclick="openLegal('terms');return false;">תקנון האתר</a>
+  </div>
 </footer>
 
 <div class="pmodal-overlay" id="pModal" onclick="if(event.target===this)closeProductModal()">
@@ -702,6 +710,7 @@
     </div>
 
     <div class="totals-block" id="totalsBlock"></div>
+    <label class="agree"><input type="checkbox" id="agreeTerms" onchange="clearOrderErr()"> <span>אני מאשר/ת את <a href="#" onclick="event.stopPropagation();openLegal('terms');return false;">תקנון האתר</a> ואת <a href="#" onclick="event.stopPropagation();openLegal('privacy');return false;">מדיניות הפרטיות</a></span></label>
     <button class="checkout" id="checkout" onclick="placeOrder()">ביצוע הזמנה</button>
     <div class="checkout-hint" id="checkoutHint">בחרו יישוב למשלוח כדי להמשיך</div>
   </div>
@@ -799,12 +808,75 @@
     <h3>יצירת קשר בנושא נגישות</h3>
     <p>אם נתקלתם בקושי בגלישה או בבעיית נגישות, נשמח שתעדכנו את רכז/ת הנגישות שלנו ונטפל בכך בהקדם:</p>
     <p>
-      שם: <span class="fillin">[שם רכז/ת הנגישות]</span><br>
-      טלפון: <span class="fillin">[מספר טלפון]</span><br>
-      דוא"ל: <span class="fillin">[כתובת אימייל]</span>
+      שם: אלמוג איצקוביץ<br>
+      טלפון: <a href="tel:+972545410844">054-5410-844</a><br>
+      דוא"ל: <a href="mailto:almog.itzko@gmail.com">almog.itzko@gmail.com</a>
     </p>
 
-    <p>תאריך עדכון ההצהרה: <span class="fillin">[תאריך]</span></p>
+    <p>תאריך עדכון ההצהרה: יולי 2026</p>
+  </div>
+</div>
+
+<!-- LEGAL: privacy + terms -->
+<div class="a11y-stmt-overlay" id="privacyOverlay" onclick="if(event.target.id==='privacyOverlay')closeLegal()">
+  <div class="a11y-stmt-modal" role="dialog" aria-modal="true" aria-label="מדיניות פרטיות">
+    <button class="x" onclick="closeLegal()" aria-label="סגירה">&times;</button>
+    <h2>מדיניות פרטיות</h2>
+    <p>מאפיית <strong>תנור ופירור</strong> (להלן "העסק") מכבדת את פרטיות המשתמשים באתר ומחויבת להגן על המידע האישי הנמסר לה. מסמך זה מסביר איזה מידע נאסף, כיצד נעשה בו שימוש וכיצד ניתן לפנות אלינו.</p>
+
+    <h3>איזה מידע נאסף</h3>
+    <p>בעת ביצוע הזמנה אנו אוספים את הפרטים שאתם מוסרים בטופס ההזמנה בלבד: שם, מספר טלפון, פרטי ההזמנה, וכן כתובת ויישוב במקרה של משלוח. איננו אוספים ואיננו שומרים פרטי אמצעי תשלום — התשלום מתבצע ישירות בביט או במזומן במעמד האיסוף/המשלוח.</p>
+
+    <h3>מטרות השימוש במידע</h3>
+    <p>המידע משמש אך ורק לצורך קבלה, ניהול וביצוע ההזמנה, ולצורך יצירת קשר איתכם בנוגע להזמנה. איננו עושים שימוש במידע לצרכים שיווקיים ללא הסכמתכם.</p>
+
+    <h3>שמירת המידע ואבטחתו</h3>
+    <p>פרטי ההזמנות נשמרים בגיליון פרטי בשירותי Google. אנו נוקטים באמצעים סבירים לשמירת המידע, אך אין באפשרותנו להבטיח הגנה מוחלטת מפני גישה בלתי מורשית.</p>
+
+    <h3>העברה לצדדים שלישיים</h3>
+    <p>איננו מוכרים או משכירים את המידע. לצורך תפעול האתר וההזמנות אנו נעזרים בשירותי צד שלישי (כגון Google לצורך שמירת ההזמנות, ושירות אירוח האתר). מידע עשוי להימסר אם נידרש לכך על פי דין.</p>
+
+    <h3>זכויותיכם</h3>
+    <p>אתם רשאים לפנות אלינו כדי לעיין במידע שנשמר עליכם, לתקנו או לבקש את מחיקתו, בכפוף להוראות הדין.</p>
+
+    <h3>יצירת קשר</h3>
+    <p>אלמוג איצקוביץ<br>טלפון: <a href="tel:+972545410844">054-5410-844</a><br>דוא"ל: <a href="mailto:almog.itzko@gmail.com">almog.itzko@gmail.com</a></p>
+
+    <p style="opacity:.7">עודכן לאחרונה: יולי 2026</p>
+  </div>
+</div>
+
+<div class="a11y-stmt-overlay" id="termsOverlay" onclick="if(event.target.id==='termsOverlay')closeLegal()">
+  <div class="a11y-stmt-modal" role="dialog" aria-modal="true" aria-label="תקנון האתר">
+    <button class="x" onclick="closeLegal()" aria-label="סגירה">&times;</button>
+    <h2>תקנון האתר</h2>
+    <p>השימוש באתר מאפיית <strong>תנור ופירור</strong> וביצוע הזמנות דרכו כפופים לתנאים המפורטים בתקנון זה. עצם השימוש והביצוע של הזמנה מהווים הסכמה לתנאים אלו.</p>
+
+    <h3>הזמנות</h3>
+    <p>ההזמנות באתר הן הזמנות מראש. קליטת ההזמנה אינה מהווה אישור סופי; העסק רשאי ליצור קשר לאישור ההזמנה ולתיאום זמן האיסוף או המשלוח. זמינות המוצרים מוגבלת וכפופה למלאי היומי.</p>
+
+    <h3>מחירים ותשלום</h3>
+    <p>המחירים הם כפי שמופיעים באתר במועד ההזמנה, וכוללים מע"מ אם חל. ייתכנו שינויי מחירים מעת לעת. התשלום מתבצע בביט או במזומן במעמד האיסוף/המשלוח; לא מתבצעת סליקת אשראי באתר.</p>
+
+    <h3>ביטולים ושינויים</h3>
+    <p>ניתן לשנות או לבטל הזמנה עד למועד סגירת ההזמנות ליום האיסוף (עד השעה 9:00). לאחר תחילת ההכנה לא ניתן לבטל. ביטולים כפופים לחוק הגנת הצרכן, התשמ"א–1981, ככל שהוא חל.</p>
+
+    <h3>אלרגנים</h3>
+    <p>מוצרי המאפייה עלולים להכיל או לבוא במגע עם רכיבים אלרגניים, ובהם גלוטן, ביצים, חלב, אגוזים, בוטנים ושומשום. באחריות הלקוח לבדוק ולהתעדכן לגבי רכיבים לפני ההזמנה והצריכה.</p>
+
+    <h3>אחריות</h3>
+    <p>המידע באתר מוצג לנוחות המשתמשים. העסק עושה מאמץ לדייק בפרטים אך אינו אחראי לטעויות או לאי-דיוקים, ואינו אחראי לנזק עקיף שייגרם משימוש באתר.</p>
+
+    <h3>קניין רוחני</h3>
+    <p>כל התכנים באתר, לרבות טקסטים, עיצוב ואיורים, הם קניינו של העסק ואין לעשות בהם שימוש ללא אישור.</p>
+
+    <h3>דין וסמכות שיפוט</h3>
+    <p>על תקנון זה יחולו דיני מדינת ישראל, וסמכות השיפוט הבלעדית נתונה לבתי המשפט המוסמכים במדינת ישראל.</p>
+
+    <h3>יצירת קשר</h3>
+    <p>אלמוג איצקוביץ<br>טלפון: <a href="tel:+972545410844">054-5410-844</a><br>דוא"ל: <a href="mailto:almog.itzko@gmail.com">almog.itzko@gmail.com</a></p>
+
+    <p style="opacity:.7">עודכן לאחרונה: יולי 2026</p>
   </div>
 </div>
 
@@ -1090,7 +1162,7 @@ function updateCart(){
   if(confirmed) return;
   const ids=Object.keys(cart);
   if(ids.length===0){
-    body.innerHTML=`<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2 2h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57L23 6H5"/></svg><p>הסל שלך ריק.<br>הוסיפו משהו חם מהמדף.</p></div>`;
+    body.innerHTML=`<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2 2h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57L23 6H5"/></svg><p>העגלה שלך עדיין ריקה —<br>בואו נמלא אותה.</p></div>`;
     foot.style.display='none';
     return;
   }
@@ -1281,6 +1353,8 @@ function placeOrder(){
   if(!name){ nEl.classList.add('bad'); showOrderErr('נא למלא שם מלא'); nEl.focus(); return; }
   if(!/^\d{10}$/.test(phoneRaw)){ pEl.classList.add('bad'); showOrderErr('נא למלא מספר טלפון תקין (10 ספרות)'); pEl.focus(); return; }
   if(method==='delivery' && !(document.getElementById('settlement').value||'')){ showOrderErr('בחרו יישוב למשלוח'); return; }
+  const agree=document.getElementById('agreeTerms');
+  if(agree && !agree.checked){ showOrderErr('יש לאשר את תקנון האתר ומדיניות הפרטיות'); agree.focus(); return; }
 
   const summary=orderSummary();
   const d=deliveryInfo();
@@ -1449,7 +1523,16 @@ function a11yTogglePanel(force){
 function a11yOpenStatement(){ document.getElementById('a11yStmt').classList.add('open'); }
 function a11yCloseStatement(){ document.getElementById('a11yStmt').classList.remove('open'); }
 function a11yStmtBg(e){ if(e.target.id==='a11yStmt') a11yCloseStatement(); }
-document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ a11yTogglePanel(false); a11yCloseStatement(); } });
+function openLegal(which){
+  closeLegal();
+  var el=document.getElementById(which==='terms'?'termsOverlay':'privacyOverlay');
+  if(el) el.classList.add('open');
+}
+function closeLegal(){
+  var p=document.getElementById('privacyOverlay'), t=document.getElementById('termsOverlay');
+  if(p) p.classList.remove('open'); if(t) t.classList.remove('open');
+}
+document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ a11yTogglePanel(false); a11yCloseStatement(); closeLegal(); } });
 document.addEventListener('click', e=>{
   const p=document.getElementById('a11yPanel'), t=document.getElementById('a11yToggle');
   if(p && p.classList.contains('open') && !p.contains(e.target) && !t.contains(e.target)) a11yTogglePanel(false);
