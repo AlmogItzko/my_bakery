@@ -1340,18 +1340,14 @@ function buildSummaryHtml(time){
   return html;
 }
 function couponCheck(code){
-  return new Promise(function(resolve){
-    if(!ORDER_ENDPOINT || !code){ resolve({allowed:true}); return; }
-    var cb='__cc'+Date.now()+Math.floor(Math.random()*1000);
-    var s=document.createElement('script');
-    var done=false;
-    var t=setTimeout(function(){ finish({allowed:true, timeout:true}); }, 7000);
-    function finish(res){ if(done) return; done=true; clearTimeout(t); try{ delete window[cb]; }catch(e){ window[cb]=undefined; } if(s.parentNode) s.parentNode.removeChild(s); resolve(res||{allowed:true}); }
-    window[cb]=function(res){ finish(res); };
-    s.onerror=function(){ finish({allowed:true, error:true}); };
-    s.src=ORDER_ENDPOINT+'?action=couponcheck&code='+encodeURIComponent(code)+'&callback='+cb+'&t='+Date.now();
-    document.body.appendChild(s);
-  });
+  if(!ORDER_ENDPOINT || !code) return Promise.resolve({allowed:true});
+  var url = ORDER_ENDPOINT+'?action=couponcheck&code='+encodeURIComponent(code)+'&t='+Date.now();
+  var ctrl = (typeof AbortController!=='undefined') ? new AbortController() : null;
+  var to = ctrl ? setTimeout(function(){ try{ctrl.abort();}catch(e){} }, 8000) : null;
+  return fetch(url, ctrl?{signal:ctrl.signal}:{})
+    .then(function(r){ return r.json(); })
+    .then(function(j){ if(to)clearTimeout(to); return j || {allowed:true}; })
+    .catch(function(){ if(to)clearTimeout(to); return {allowed:true}; });
 }
 async function placeOrder(){
   if(!ordersOpen){ alert('ההזמנות סגורות כרגע. נסו שוב מאוחר יותר.'); return; }
