@@ -234,6 +234,9 @@
   .totals .tv{font-family:var(--display);font-weight:900;font-size:1.7rem}
   .checkout{width:100%;background:var(--jam);color:var(--cream);border:none;padding:16px;border-radius:44px;font-family:var(--body);font-weight:700;font-size:1.1rem;cursor:pointer;transition:background .2s ease}
   .checkout:hover{background:var(--jam-dark)}
+  .checkout.busy{opacity:.92;cursor:default}
+  .checkout .spin{display:inline-block;width:16px;height:16px;border:2.5px solid rgba(248,240,222,.4);border-top-color:var(--cream);border-radius:50%;margin-left:8px;vertical-align:-3px;animation:spin .7s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
   .checkout:disabled{opacity:.5;cursor:not-allowed}
   .checkout-hint{text-align:center;font-size:.82rem;color:var(--jam);margin-top:8px;display:none}
   .checkout-hint.show{display:block}
@@ -1349,6 +1352,18 @@ function couponCheck(code){
     .then(function(j){ if(to)clearTimeout(to); return j || {allowed:true}; })
     .catch(function(){ if(to)clearTimeout(to); return {allowed:true}; });
 }
+function setCheckoutBusy(b){
+  var btn=document.getElementById('checkout');
+  if(!btn) return;
+  if(b){
+    if(btn._orig==null) btn._orig=btn.innerHTML;
+    btn.disabled=true; btn.classList.add('busy');
+    btn.innerHTML='<span class="spin" aria-hidden="true"></span>מעבד…';
+  } else {
+    btn.disabled=false; btn.classList.remove('busy');
+    if(btn._orig!=null){ btn.innerHTML=btn._orig; btn._orig=null; }
+  }
+}
 async function placeOrder(){
   if(!ordersOpen){ alert('ההזמנות סגורות כרגע. נסו שוב מאוחר יותר.'); return; }
   if(itemCount()===0) return;
@@ -1382,6 +1397,7 @@ async function placeOrder(){
     return;
   }
 
+  setCheckoutBusy(true);
   if(appliedCoupon && ORDER_ENDPOINT){
     var chk = await couponCheck(appliedCoupon.code);
     if(chk && chk.allowed===false){
@@ -1391,6 +1407,7 @@ async function placeOrder(){
       renderTotals();
       showOrderErr('הקופון אזל — הוסר מההזמנה. אפשר להמשיך ללא הקופון.');
       try{ document.getElementById('couponCode').scrollIntoView({block:'center',behavior:'smooth'}); }catch(e){}
+      setCheckoutBusy(false);
       return;
     }
   }
@@ -1434,6 +1451,7 @@ async function placeOrder(){
   }
   try{ if(navigator.clipboard) navigator.clipboard.writeText(summary); }catch(e){}
 
+  setCheckoutBusy(false);
   confirmed=true;
   document.getElementById('drawerFoot').style.display='none';
   document.getElementById('pigBanner').style.display='none';
