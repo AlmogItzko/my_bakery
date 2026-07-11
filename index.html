@@ -1035,6 +1035,9 @@ let confirmed = false;
 let activeCat = 'הכול';
 let ordersOpen = true;   /* מתג ראשי — נקרא מהגיליון, מפתח "הזמנות_פעילות" (כן/לא) */
 let closedMsg = '';
+let minDeliveryOn = false;    /* מפתח "מינימום_משלוח_פעיל" (כן/לא) */
+let minDeliveryDefault = 0;   /* מפתח "מינימום_משלוח" (מספר — ברירת מחדל לכל היישובים) */
+let minDeliveryByDest = {};   /* מפתח "מינימום_משלוח_לפי_יישוב": "שם=סכום, שם=סכום" */
 const catWrap = document.getElementById('cats');
 function catIcon(c){
   var basket='<svg viewBox="0 0 80 80"><path d="M20 36h40l-4 26a4 4 0 0 1-4 4H28a4 4 0 0 1-4-4z" fill="#B65E3C"/><path d="M20 36h40l-1.2 8H21.2z" fill="#A8651A"/><path d="M31 36l6-15M49 36l-6-15" stroke="#5A3410" stroke-width="3.5" stroke-linecap="round" fill="none" opacity=".7"/><circle cx="35" cy="51" r="4.2" fill="#A9542F"/><circle cx="47" cy="53" r="4.2" fill="#6E7548"/><circle cx="41" cy="47" r="4.2" fill="#FBF8F3"/></svg>';
@@ -1266,6 +1269,20 @@ function grandTotal(){
   var d = deliveryInfo();
   return sub - couponDiscount(sub) + (d.state === 'ok' ? d.fee : 0);
 }
+function parseDestMins(str){
+  var o={};
+  String(str||'').split(/[,\n;]+/).forEach(function(part){
+    var m=part.split(/[=:]/);
+    if(m.length>=2){ var name=m[0].trim(); var amt=parseFloat(m[1].replace(/[^0-9.]/g,'')); if(name && !isNaN(amt)) o[name]=amt; }
+  });
+  return o;
+}
+function minForDest(name){
+  if(!minDeliveryOn) return 0;
+  var n=String(name||'').trim();
+  if(minDeliveryByDest[n]!=null) return minDeliveryByDest[n];
+  return minDeliveryDefault||0;
+}
 
 function trow(label, value){ return '<div class="trow"><span>' + label + '</span><span>' + value + '</span></div>'; }
 
@@ -1388,6 +1405,14 @@ async function placeOrder(){
   if(!name){ nEl.classList.add('bad'); showOrderErr('נא למלא שם מלא'); nEl.focus(); return; }
   if(!/^\d{10}$/.test(phoneRaw)){ pEl.classList.add('bad'); showOrderErr('נא למלא מספר טלפון תקין (10 ספרות)'); pEl.focus(); return; }
   if(method==='delivery' && !(document.getElementById('settlement').value||'')){ showOrderErr('בחרו יישוב למשלוח'); return; }
+  if(method==='delivery' && minDeliveryOn){
+    var destName=(document.getElementById('settlement').value||'');
+    var mn=minForDest(destName);
+    if(mn>0 && grandTotal() < mn){
+      showOrderErr('המינימום להזמנה במשלוח ל'+destName+' הוא ₪'+mn+' (חסרים ₪'+Math.ceil(mn-grandTotal())+')');
+      return;
+    }
+  }
   const agree=document.getElementById('agreeTerms');
   if(agree && !agree.checked){
     var al=agree.closest('.agree');
@@ -1678,6 +1703,9 @@ async function loadContent(){
     if(map['הערת_הזמנה']){ const n=document.getElementById('orderNote'); if(n){ n.textContent=map['הערת_הזמנה']; n.style.display='block'; } }
     ordersOpen = !(map['הזמנות_פעילות'] && String(map['הזמנות_פעילות']).trim()==='לא');
     closedMsg = map['הודעת_סגירה'] ? String(map['הודעת_סגירה']).trim() : '';
+    minDeliveryOn = (map['מינימום_משלוח_פעיל'] && String(map['מינימום_משלוח_פעיל']).trim()==='כן');
+    minDeliveryDefault = parseFloat(String(map['מינימום_משלוח']||'').replace(/[^0-9.]/g,'')) || 0;
+    minDeliveryByDest = parseDestMins(map['מינימום_משלוח_לפי_יישוב']||'');
     applyOrdersState();
   }catch(e){ /* leave built-in defaults */ }
   try{
