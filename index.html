@@ -471,10 +471,10 @@
     .reveal{opacity:1;transform:none}
   }
 </style>
-<meta name="site-version" content="24">
+<meta name="site-version" content="26">
 </head>
 <body>
-<div id="verTest" style="background:var(--honey);color:var(--cream);text-align:center;padding:9px 12px;font-family:var(--body);font-weight:700;font-size:.95rem">✓ גרסה 24 — הרענון האוטומטי עובד</div>
+
 <div id="announceBar" class="announce" style="display:none"></div>
 
 <!-- wheat mark reused -->
@@ -1712,6 +1712,7 @@ async function loadContent(){
     minDeliveryOn = (map['מינימום_משלוח_פעיל'] && String(map['מינימום_משלוח_פעיל']).trim()==='כן');
     minDeliveryDefault = parseFloat(String(map['מינימום_משלוח']||'').replace(/[^0-9.]/g,'')) || 0;
     minDeliveryByDest = parseDestMins(map['מינימום_משלוח_לפי_יישוב']||'');
+    window.__contentVersion = parseInt(String(map['גרסת_תוכן']||'').replace(/[^0-9]/g,''),10) || 0;
     applyOrdersState();
   }catch(e){ /* leave built-in defaults */ }
   try{
@@ -1747,12 +1748,12 @@ async function loadContent(){
 loadContent();
 </script>
 <script>
-/* בדיקת גרסה — טוען מחדש לשונית פתוחה כשמתפרסמת גרסה חדשה */
+/* בדיקת גרסה — טוען מחדש לשונית פתוחה כשמתפרסמת גרסה חדשה (HTML או תוכן הגיליון) */
 (function(){
   var meta = document.querySelector('meta[name="site-version"]');
   var cur = meta ? (parseInt(meta.content,10)||0) : 0;
   var busy = false;
-  function check(){
+  function checkVersion(){
     if(busy) return; busy = true;
     var url = location.href.split(/[?#]/)[0] + '?_v=' + Date.now();
     fetch(url, {cache:'no-store'})
@@ -1764,8 +1765,20 @@ loadContent();
       .catch(function(){})
       .then(function(){ busy = false; });
   }
-  setInterval(check, 60000);
-  document.addEventListener('visibilitychange', function(){ if(!document.hidden) check(); });
+  function checkContent(){
+    if(!CONTENT_SHEET_ID || window.__contentVersion == null) return;
+    var u = 'https://docs.google.com/spreadsheets/d/'+CONTENT_SHEET_ID+'/gviz/tq?tqx=out:csv&sheet='+encodeURIComponent(SETTINGS_TAB)+'&_c='+Date.now();
+    fetch(u, {cache:'no-store'})
+      .then(function(r){ return r.text(); })
+      .then(function(csv){
+        var m = csv.match(/גרסת_תוכן"?\s*,\s*"?(\d+)/);
+        if(m && parseInt(m[1],10) > window.__contentVersion){ location.reload(); }
+      })
+      .catch(function(){});
+  }
+  function checkAll(){ checkVersion(); checkContent(); }
+  setInterval(checkAll, 60000);
+  document.addEventListener('visibilitychange', function(){ if(!document.hidden) checkAll(); });
 })();
 </script>
 </body>
