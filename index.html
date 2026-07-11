@@ -471,7 +471,7 @@
     .reveal{opacity:1;transform:none}
   }
 </style>
-<meta name="site-version" content="27">
+<meta name="site-version" content="28">
 </head>
 <body>
 
@@ -1667,7 +1667,7 @@ function parseCsv(text){
   if(f!==''||row.length){ row.push(f); rows.push(row); }
   return rows;
 }
-function sheetCsvUrl(gid){ return 'https://docs.google.com/spreadsheets/d/'+CONTENT_SHEET_ID+'/gviz/tq?tqx=out:csv&gid='+encodeURIComponent(gid)+'&t='+Date.now(); }
+function sheetCsvUrl(gid){ return 'https://docs.google.com/spreadsheets/d/'+CONTENT_SHEET_ID+'/gviz/tq?tqx=out:csv&headers=1&gid='+encodeURIComponent(gid)+'&t='+Date.now(); }
 function colClean(x){ return String(x).replace(/[\uFEFF\u200e\u200f\u202a-\u202e\u2066-\u2069]/g,'').trim(); }
 function colIdx(h,name){ var n=colClean(name); return h.findIndex(x=>colClean(x)===n); }
 function colIdxAny(h,names){ for(var i=0;i<names.length;i++){ var k=colIdx(h,names[i]); if(k>=0) return k; } return -1; }
@@ -1771,7 +1771,7 @@ loadContent();
   }
   function checkContent(){
     if(!CONTENT_SHEET_ID || window.__contentVersion == null) return;
-    var u = 'https://docs.google.com/spreadsheets/d/'+CONTENT_SHEET_ID+'/gviz/tq?tqx=out:csv&gid='+encodeURIComponent(SETTINGS_GID)+'&_c='+Date.now();
+    var u = 'https://docs.google.com/spreadsheets/d/'+CONTENT_SHEET_ID+'/gviz/tq?tqx=out:csv&headers=1&gid='+encodeURIComponent(SETTINGS_GID)+'&_c='+Date.now();
     fetch(u, {cache:'no-store'})
       .then(function(r){ return r.text(); })
       .then(function(csv){
