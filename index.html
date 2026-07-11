@@ -471,6 +471,7 @@
     .reveal{opacity:1;transform:none}
   }
 </style>
+<meta name="site-version" content="23">
 </head>
 <body>
 <div id="announceBar" class="announce" style="display:none"></div>
@@ -1743,6 +1744,28 @@ async function loadContent(){
   renderCats(); renderMenu(); applyTimeOptions();
 }
 loadContent();
+</script>
+<script>
+/* בדיקת גרסה — טוען מחדש לשונית פתוחה כשמתפרסמת גרסה חדשה */
+(function(){
+  var meta = document.querySelector('meta[name="site-version"]');
+  var cur = meta ? (parseInt(meta.content,10)||0) : 0;
+  var busy = false;
+  function check(){
+    if(busy) return; busy = true;
+    var url = location.href.split(/[?#]/)[0] + '?_v=' + Date.now();
+    fetch(url, {cache:'no-store'})
+      .then(function(r){ return r.text(); })
+      .then(function(html){
+        var m = html.match(/name=["']site-version["']\s+content=["'](\d+)["']/i);
+        if(m && parseInt(m[1],10) > cur){ location.reload(); }
+      })
+      .catch(function(){})
+      .then(function(){ busy = false; });
+  }
+  setInterval(check, 60000);
+  document.addEventListener('visibilitychange', function(){ if(!document.hidden) check(); });
+})();
 </script>
 </body>
 </html>
